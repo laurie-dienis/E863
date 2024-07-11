@@ -1,0 +1,121 @@
+elements:
+  1:
+    description: DAQ
+    ip-address: null
+    model: faster-daq
+    number-of-inputs: 1
+    parameters-config-file: faster_trunk.cfg
+    part-of-channel-group: decision
+    uid: 1
+  2:
+    connected-to: 1
+    data-target: 1
+    description: noname
+    intro-target: rhb
+    ip-address: 192.168.2.160
+    model: syroco-amc
+    parameters-config-file: syroco_amc_192.168.2.160.cfg
+    state-target: 1
+    trigger-target: 1
+    uid: 2
+  5:
+    connected-to: 2
+    connected-to-slot: 1
+    data-target: 2
+    description: daughterboard A
+    intro-target: rhb
+    ip-address: 192.168.2.160
+    model: mosahr-adc-crrc4
+    parameters-config-file: ch_1_2_3_4.cfg
+    state-target: 1
+    trigger-target: 1
+    uid: 5
+  6:
+    connected-to: 5
+    connected-to-slot: 1
+    description: CRRC4_SPECTRO_1
+    model: mosahr-crrc4-channel
+    uid: 6
+  7:
+    connected-to: 5
+    connected-to-slot: 2
+    description: Si
+    model: mosahr-crrc4-channel
+    uid: 7
+  8:
+    connected-to: 5
+    connected-to-slot: 3
+    description: CRRC4_SPECTRO_3
+    model: mosahr-crrc4-channel
+    uid: 8
+  9:
+    connected-to: 5
+    connected-to-slot: 4
+    description: TAC
+    model: mosahr-crrc4-channel
+    uid: 9
+  10:
+    connected-to: 2
+    connected-to-slot: 2
+    data-target: 2
+    description: daughterboard B
+    intro-target: rhb
+    ip-address: 192.168.2.160
+    model: mosahr-adc-crrc4
+    parameters-config-file: ch_5_6_7_8.cfg
+    state-target: 1
+    trigger-target: 1
+    uid: 10
+  11:
+    connected-to: 10
+    connected-to-slot: 1
+    description: CRRC4_SPECTRO_5
+    model: mosahr-crrc4-channel
+    uid: 11
+  12:
+    connected-to: 10
+    connected-to-slot: 2
+    description: CRRC4_SPECTRO_6
+    model: mosahr-crrc4-channel
+    uid: 12
+  13:
+    connected-to: 10
+    connected-to-slot: 3
+    description: CRRC4_SPECTRO_7
+    model: mosahr-crrc4-channel
+    uid: 13
+  14:
+    connected-to: 10
+    connected-to-slot: 4
+    description: CRRC4_SPECTRO_8
+    model: mosahr-crrc4-channel
+    uid: 14
+interface:
+  channel-views:
+    button-groups:
+      1:
+        button-group-uid: 1
+        contains-channel-groups:
+        - 0
+        description: Channel groups
+        position:
+        - 1
+    channel-groups:
+      0:
+        channel-group-uid: 0
+        contains-channels:
+        - 7
+        - 9
+        description: Si_2
+        position: !!python/tuple
+        - 0
+        - 0
+    unassigned-channels: []
+  config-type: 0
+  data-output-dir: ./data
+  datafile-no-date: false
+  expert-trapez: false
+  rhb-host: 192.168.0.1
+  start-in-disk-mode: false
+  t0-target: 192.168.2.160
+  title: astro

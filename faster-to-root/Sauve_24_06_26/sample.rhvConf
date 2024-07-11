@@ -1,0 +1,110 @@
+//==========================================================
+// List of Page Layouts
+//==========================================================
+//----------------------------------------------------------
+// Layout "H1L3" 
+//----------------------------------------------------------
+FPageLayout;H1L3;1 pad on the upper row and 3 in the lower row;4
+1;TPad;Pad_1;Pad number 1
+0.0001;0.5001;0.9999;0.9999
+2;TPad;Pad_2;Pad number 2
+0.0010998;0.0005998;0.332367;0.4994
+3;TPad;Pad_3;Pad number 3
+0.334366;0.0005998;0.665634;0.4994
+4;TPad;Pad_4;Pad number 4
+0.667633;0.0005998;0.9989;0.4994
+//----------------------------------------------------------
+// Layout "X2Y3" 
+//----------------------------------------------------------
+FPageLayout;X2Y3;2 columns 3 lines;6
+1;TPad;Pad_1;Pad number 1
+0.0001;0.666767;0.4999;0.9999
+2;TPad;Pad_2;Pad number 2
+0.5001;0.666767;0.9999;0.9999
+3;TPad;Pad_3;Pad number 3
+0.0001;0.333433;0.4999;0.666567
+4;TPad;Pad_4;Pad number 4
+0.5001;0.333433;0.9999;0.666567
+5;TPad;Pad_5;Pad number 5
+0.0001;0.0001;0.4999;0.333233
+6;TPad;Pad_6;Pad number 6
+0.5001;0.0001;0.9999;0.333233
+//----------------------------------------------------------
+// Layout "OnePad" 
+//----------------------------------------------------------
+FPageLayout;OnePad;One pad only;1
+1;TCanvas;Pad_1;Pad number 1
+0;0;1;1
+//----------------------------------------------------------
+// Layout "X2Y2" 
+//----------------------------------------------------------
+FPageLayout;X2Y2;2 columns 2 lines;4
+1;TPad;Pad_1;Pad number 1
+0;0.5;0.5;1
+2;TPad;Pad_2;Pad number 2
+0.5;0.5;1;1
+3;TPad;Pad_3;Pad number 3
+0;0;0.5;0.5
+4;TPad;Pad_4;Pad number 4
+0.5;0;1;0.5
+//----------------------------------------------------------
+// Layout "X2Y1" 
+//----------------------------------------------------------
+FPageLayout;X2Y1;Layout from canvas "Editor".;2
+1;TPad;Pad_1;Pad number 1
+0.01;0.01;0.49;0.99
+2;TPad;Pad_2;Pad number 2
+0.51;0.01;0.99;0.99
+//----------------------------------------------------------
+// Layout "X1Y2" 
+//----------------------------------------------------------
+FPageLayout;X1Y2;1 column 2 lines;2
+1;TPad;Pad_1;Pad number 1
+0;0.5;1;1
+2;TPad;Pad_2;Pad number 2
+0;0;1;0.5
+//----------------------------------------------------------
+// Layout "L1R2" 
+//----------------------------------------------------------
+FPageLayout;L1R2;Layout from canvas "Libre".;3
+1;TPad;Pad_1;Pad number 1
+0;0;0.5;1
+2;TPad;Pad_2;Pad number 2
+0.5;0.5;1;1
+3;TPad;Pad_3;Pad number 3
+0.5;0;1;0.5
+//----------------------------------------------------------
+// Layout "H1L2" 
+//----------------------------------------------------------
+FPageLayout;H1L2;Layout from canvas "Libre".;3
+1;TPad;Pad_1;Pad number 1
+0.00879397;0.493289;0.98995;0.991611
+2;TPad;Pad_2;Pad number 2
+0.0188442;0.0151007;0.494975;0.486577
+3;TPad;Pad_3;Pad number 3
+0.497487;0.0151007;0.979899;0.486577
+//==========================================================
+// List of Booklets
+//==========================================================
+//----------------------------------------------------------
+// Booklet ALL_COUNTERS
+//----------------------------------------------------------
+FBooklet;ALL_COUNTERS;Booklet from RHV Editor.;1
+FPage;ALL;ALL from canvas Editor;OnePad;1
+1;ALL_COUNTERS_GRAPH/LineColor=602,FillColor=632,FillStyle=1001
+
+//----------------------------------------------------------
+// Booklet "Si"
+//----------------------------------------------------------
+FBooklet;Si;Booklet from Si Editor.;3
+FPage;Si;Si from canvas Editor;H1L2;3
+1;Si_SPECTRO_GRAPH/LineColor=602,FillColor=0,FillStyle=1001
+2;Si_OSC/LineColor=632,LineWidth=3,FillColor=0,FillStyle=1001
+3;Si_COUNTER_GRAPH/LineColor=602,FillColor=632,FillStyle=1001
+FPage;TAC;TAC from canvas Editor;H1L2;3
+1;TAC_SPECTRO_GRAPH/LineColor=602,FillColor=0,FillStyle=1001
+2;TAC_OSC/LineColor=632,LineWidth=3,FillColor=0,FillStyle=1001
+3;TAC_COUNTER_GRAPH/LineColor=602,FillColor=632,FillStyle=1001
+FPage;Si_vs_T;Si versus Timer;X1Y2;2
+1;SivsTime/LineColor=602,FillColor=0,FillStyle=1001
+2;SiratevsTime/LineColor=632,LineWidth=3,FillColor=0,FillStyle=1001
