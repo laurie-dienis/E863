@@ -32,7 +32,7 @@ std::vector<TH1D*> ReadData(const std::string& file)
 }
 void ganil()
 {
-    auto hs {ReadData("./Inputs/Ganil/USC_Si_test_3624-5-2_3_200V_1p2uA.root")};
+    auto hs {ReadData("Inputs/ACTAR/USC_Si_test_3624-5-2_3_200V_1p2uA.root")};
 
     // Create source
     Calibration::Source source;
@@ -52,6 +52,12 @@ void ganil()
         runner->SetRange(5000, 7000);
         runner->DoIt();
         runner->Draw(new TCanvas);
+         if(runner == &runner3){
+            cout << "SI_3" << endl;
+         }
+         if(runner == &runner4){
+            cout << "SI_4" << endl;
+         }
         runner->PrintRes();
     }
 

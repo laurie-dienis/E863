@@ -117,6 +117,48 @@ void Pipe2_main_PID() {
     PID->GetXaxis()->SetTitle("E_Si (MeV)");
     PID->Draw("colz");
 
+    // TF1 *line1 = new TF1("line1","261.7*x^(-0.4844)+10",0, 20);
+    // line1->SetLineColor(kRed);
+    // line1->Draw("same");
+    
+    // TF1 *line2 = new TF1("line2","534.226*x^(-0.493824)-200",0, 20);
+    // line2->SetLineColor(kBlue);
+    // line2->Draw("same");
+    
+    //protons
+    TF1 *line1 = new TF1("line1","(413.578*x^(-0.494904))-27",11.11, 20);
+    line1->SetLineColor(kCyan);
+    line1->SetLineWidth(4);
+    line1->Draw("same");
+    
+    //alpha
+    TF1 *line2 = new TF1("line2","(2481.*x^(-1.22641))+5",11.3, 20);
+    line2->SetLineColor(kViolet);
+    line2->SetLineWidth(4);
+    line2->Draw("same");
+    
+    //protons
+    TF1 *line3 = new TF1("line3","22.3705*x^(-0.427282)",0, 20);
+    line3->SetLineColor(kOrange);
+    line3->SetLineWidth(4);
+    line3->Draw("same");
+    
+    //alpha
+    TF1 *line4 = new TF1("line4","44.6592*x^(-0.461368)",0, 20);
+    line4->SetLineColor(kOrange+7);
+    line4->SetLineWidth(4);
+    line4->Draw("same");
+    
+    // TF1 *line5 = new TF1("line5","18.34*x^(-0.374257)",0, 20);
+    // line5->SetLineColor(kViolet);
+    // line5->Draw("same");
+
+    //alpha
+    TF1 *line6 = new TF1("line6","41.85433*x^(-0.47297)",0, 20);
+    line6->SetLineColor(kGreen);
+    line6->SetLineWidth(4);
+    line6->Draw("same");
+
     // Plot the cut if it exists
     if (cutG) {
         cutG->SetLineColor(kRed); // Set cut line color
@@ -125,10 +167,10 @@ void Pipe2_main_PID() {
     }
     c20->SaveAs("PID_Si1.png");
     
-    auto *c21 = new TCanvas("c21", "Pipe2 canvas 0, PID faster");
-    PID_faster->GetYaxis()->SetTitle("faster time (ns)");
-    PID_faster->GetXaxis()->SetTitle("E_Si (MeV)");
-    PID_faster->Draw("colz");
+    // auto *c21 = new TCanvas("c21", "Pipe2 canvas 0, PID faster");
+    // PID_faster->GetYaxis()->SetTitle("faster time (ns)");
+    // PID_faster->GetXaxis()->SetTitle("E_Si (MeV)");
+    // PID_faster->Draw("colz");
 
     // Write the histogram and the new tree (if the cut exists) to the new file
     if (newFile) {
