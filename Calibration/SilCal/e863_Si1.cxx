@@ -13,10 +13,10 @@
 #include "CalibrationRunner.cxx"
 #include "CalibrationSource.cxx"
 
-void e863() {
+void e863_Si1() {
 
   // Ouvrir le fichier ROOT
-  TFile *file = TFile::Open("Inputs/E863/Si1_run020.root");
+  TFile *file = TFile::Open("Inputs/E863/Si1_run008.root");
   if (!file || file->IsZombie()) {
     std::cerr << "Impossible d'ouvrir le fichier!" << std::endl;
   }
@@ -42,7 +42,9 @@ void e863() {
   Calibration::Source source;
   source.Print();
 
-  Calibration::Runner runner{&source, hist, hist};
+  auto* histrebin {(TH1D*)hist->Clone("histRebin")};
+  histrebin->Rebin(2);
+  Calibration::Runner runner{&source, histrebin, hist, false};
   runner.SetRange(56000, 65000);
   runner.DoIt();
   runner.Draw(new TCanvas);

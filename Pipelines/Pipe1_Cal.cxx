@@ -15,7 +15,7 @@ void Pipe1_Cal(){
 
   // List of file names
   std::vector<std::string> fileNames = {
-      "faster-to-root/root/run_019.root",
+      "faster-to-root/root/run_008.root",
      // "faster-to-root/root/run_006.root",
       //"RootFiles/Raw/run_test2.root",
   };
@@ -38,12 +38,14 @@ void Pipe1_Cal(){
   double cal_parameter_tac_2 = 0.000100758959842;
 
   // Create histograms
-  TH1F *hist_si_1 = new TH1F("hist_si_1", "SI Histogram 1", 10000, 0, 220000);
+  //TH1F *hist_si_1 = new TH1F("hist_si_1", "SI Histogram 1", 10000, 0, 220000);
+  TH1D *hist_si_1 = new TH1D("hist_si_1", "SI Histogram 1", 300, 56000, 65000);
   TH1F *hist_tac_1 = new TH1F("hist_tac_1", "TAC Histogram 1", 7000, 0, 850000);
   TH1F *hist_si_cal_1 = new TH1F("hist_si_cal_1", "SI Calibrated Histogram 1", 2000, 1, 22);
   TH1F *hist_tac_cal_1 = new TH1F("hist_tac_cal_1", "TAC calibrated Histogram 1", 5000, 0, 80);
   
-  TH1F *hist_si_2 = new TH1F("hist_si_2", "SI Histogram 2", 10000, 0, 220000);
+  //TH1F *hist_si_2 = new TH1F("hist_si_2", "SI Histogram 2", 10000, 0, 220000);
+  TH1D *hist_si_2 = new TH1D("hist_si_2", "SI Histogram 2", 300, 68000, 82000);
   TH1F *hist_tac_2 = new TH1F("hist_tac_2", "TAC Histogram 2", 5000, 0, 950000);
   TH1F *hist_si_cal_2 = new TH1F("hist_si_cal_2", "SI Calibrated Histogram 2", 2000, 1, 22);
   TH1F *hist_tac_cal_2 = new TH1F("hist_tac_cal_2", "TAC Calibrated Histogram 2", 5000, 0, 80);
@@ -151,37 +153,40 @@ void Pipe1_Cal(){
   c10->cd(2);
   hist_si_2->Draw();
   c10->SaveAs("hist_si.png");
+  
+  TCanvas *c17 = new TCanvas("c17", "SI_1 Histogram", 800, 600);
+  hist_si_1->Draw();
 
-  TCanvas *c11 = new TCanvas("c11", "TAC Histogram", 800, 600);
-  c11->DivideSquare(2);
-  c11->cd(1);
-  hist_tac_1->Draw();
-  c11->cd(2);
-  hist_tac_2->Draw();
-  c11->SaveAs("hist_tac.png");
+  // TCanvas *c11 = new TCanvas("c11", "TAC Histogram", 800, 600);
+  // c11->DivideSquare(2);
+  // c11->cd(1);
+  // hist_tac_1->Draw();
+  // c11->cd(2);
+  // hist_tac_2->Draw();
+  // c11->SaveAs("hist_tac.png");
 
-  TCanvas *c12 = new TCanvas("c12", "SI Calibrated Histogram n1", 800, 600);
-  hist_si_cal_1->GetXaxis()->SetTitle("E (MeV)"); 
-  hist_si_cal_1->Draw();
-  c12->SaveAs("si_cal_1.png");
+  // TCanvas *c12 = new TCanvas("c12", "SI Calibrated Histogram n1", 800, 600);
+  // hist_si_cal_1->GetXaxis()->SetTitle("E (MeV)"); 
+  // hist_si_cal_1->Draw();
+  // c12->SaveAs("si_cal_1.png");
   
-  TCanvas *c13 = new TCanvas("c13", "SI Calibrated Histogram n2", 800, 600);
-  hist_si_cal_2->GetXaxis()->SetTitle("E (MeV)"); 
-  hist_si_cal_2->Draw();
-  c13->SaveAs("si_cal_1.png");
+  // TCanvas *c13 = new TCanvas("c13", "SI Calibrated Histogram n2", 800, 600);
+  // hist_si_cal_2->GetXaxis()->SetTitle("E (MeV)"); 
+  // hist_si_cal_2->Draw();
+  // c13->SaveAs("si_cal_1.png");
   
-  TCanvas *c14 = new TCanvas("c14", "TAC Calibrated Histogram n1", 800, 600);
-  hist_tac_cal_1->GetXaxis()->SetTitle("TOF (s)"); 
-  hist_tac_cal_1->Draw();
-  c14->SaveAs("tac_cal_1.png");
+  // TCanvas *c14 = new TCanvas("c14", "TAC Calibrated Histogram n1", 800, 600);
+  // hist_tac_cal_1->GetXaxis()->SetTitle("TOF (s)"); 
+  // hist_tac_cal_1->Draw();
+  // c14->SaveAs("tac_cal_1.png");
   
-  TCanvas *c15 = new TCanvas("c15", "TAC Calibrated Histogram n2", 800, 600);
-  hist_tac_cal_2->GetXaxis()->SetTitle("TOF (s)"); 
-  hist_tac_cal_2->Draw();
-  c14->SaveAs("tac_cal_2.png");
+  // TCanvas *c15 = new TCanvas("c15", "TAC Calibrated Histogram n2", 800, 600);
+  // hist_tac_cal_2->GetXaxis()->SetTitle("TOF (s)"); 
+  // hist_tac_cal_2->Draw();
+  // c14->SaveAs("tac_cal_2.png");
   
-  TCanvas *c16 = new TCanvas("c16", "Si Calibrated Histogram n12", 800, 600);
-  hist_faster_TAC->Draw("colz");
-  c16->SaveAs("tac_cal_12.png");
+  // TCanvas *c16 = new TCanvas("c16", "Si Calibrated Histogram n12", 800, 600);
+  // hist_faster_TAC->Draw("colz");
+  // c16->SaveAs("tac_cal_12.png");
 }
 #endif

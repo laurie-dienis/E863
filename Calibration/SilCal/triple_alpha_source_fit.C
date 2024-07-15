@@ -57,7 +57,7 @@ void triple_alpha_source_fit() {
                            "A3", "Mean3", "Sigma3");
 
   // Initialize the values of the parameters
-  fitFunction->SetParameters(700, 57232, 300, 800, 60898, 300, 500, 64442, 300);
+  fitFunction->SetParameters(700, 57232, 200, 800, 60898, 200, 500, 64442, 200);
 
   fitFunction->SetLineColor(kBlue);
   fitFunction->SetLineWidth(3);
@@ -89,15 +89,20 @@ void triple_alpha_source_fit() {
 
   // Sigma values
   double sigma1 = fitFunction->GetParameter(2);
+  double err_sigma1 = fitFunction->GetParError(2);
   double sigma2 = fitFunction->GetParameter(5);
+  double err_sigma2 = fitFunction->GetParError(5);
   double sigma3 = fitFunction->GetParameter(8);
+  double err_sigma3 = fitFunction->GetParError(8);
 
   double avgSigma =
       ((std::abs(sigma1) + std::abs(sigma2) + std::abs(sigma3)) / 3.0) *
       slope; // in keV
+  double avg_err = sqrt(pow(err_sigma1,2)+pow(err_sigma2,2)+pow(err_sigma3,2)/3);
 
   std::cout << "slope = " << slope << std::endl;
-  std::cout << "Sigma_" << i << " = " << avgSigma << " keV" << std::endl;
+  std::cout << "Sigma_" << i << " = " << avgSigma << "+-" << avg_err << " keV" << std::endl;
+  std::cout << "FWHM_" << i << " = " << avgSigma*2.35 << "+-" << avg_err*2.35 << " keV" << std::endl;
 
   // Draw
   auto *c0{new TCanvas{"c0", "Silicon canvas"}};

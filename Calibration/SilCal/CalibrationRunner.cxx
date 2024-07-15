@@ -174,9 +174,9 @@ void Calibration::Runner::DoFineCalibration()
         auto [min, max] {fSource->GetLimits(name)};
         fGaussFine[name]->SetRange(min, max);
         // Set some limits on parameters to avoid wrong fits
-        fGaussFine[name]->SetParLimits(0, 0, 1e8);   // amp
+        fGaussFine[name]->SetParLimits(0, 5, 1e5);   // amp
         fGaussFine[name]->SetParLimits(1, min, max); // mean
-        fGaussFine[name]->SetParLimits(2, 0, 5);     // sigma c [0, 5] MeV
+        fGaussFine[name]->SetParLimits(2, 0, 20);     // sigma c [0, 5] MeV
         // And now initial parameters!
         auto [mean, amp] {GetAmpMeanInRange(fHistPre.get(), min, max)};
         fGaussFine[name]->SetParameters(amp, mean, sigmas[s].back());
