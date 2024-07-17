@@ -50,9 +50,13 @@ double mu238=238.0*mu+2.558;
 double mds278=278.0*mu+146.380;
 double mca44=44.0*mu-41.469;
 
+double mv51 = 51.0*mu - 52.203;
 
+double mfe56 = 56*mu - 60.607; 
+double mtc95 = 95*mu - 85.982;
 
-
+double mcr52 = 52*mu -55.419;
+double mnb91 = 91*mu - 86.638;
 
 double ma,mA,ms,mB,mb,mx,mS;
 #endif /* THM2_hpp */

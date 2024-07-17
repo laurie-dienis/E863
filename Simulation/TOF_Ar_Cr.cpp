@@ -15,7 +15,7 @@
 #include "mass.hpp"
 
 
-void TOF_Ar_Al() {
+void TOF_Ar_Cr() {
     
     // *******************************************
     // variables
@@ -39,15 +39,12 @@ void TOF_Ar_Al() {
     double Elab,Ee,Qreac,Qreac2,target_thickness;
 
     // Reaction p(6Li,p')6Li*
-        Elab=13;  //1.8 MeV/u 27MeV
+        Elab=23;  //1.8 MeV/u 27MeV
 		Ee=0; 
-        ma=mal27;
+        ma=mcr52;
         mA=mar40;
-        mB=mcu63+Ee;
-        mb=malpha;
-        mS=mzn66+Ee;
-        ms=mp;
-		
+        mB=mnb91+Ee;
+        mb=mp;
 		
 	target_thickness=85; // Gold(Au) target, in micrometer 
 
@@ -64,8 +61,6 @@ void TOF_Ar_Al() {
     mA /= 1000.;
     mB /= 1000.;
     mb /= 1000.;
-	mS /= 1000.;
-    ms /= 1000.;
     Elab /= 1000.;           
 		
     //Random generator 
@@ -74,14 +69,13 @@ void TOF_Ar_Al() {
     
     //random for E lab 6MeV/u until 0.35 MeV/u
 	std::mt19937_64 rng2;
-	std::uniform_real_distribution<double> unif2(23.01,250);
+	std::uniform_real_distribution<double> unif2(1,239);
     
 	// definition of the 2D and 1D spectra
-    TH2F *h1 = new TH2F("h1","",800,1,20,800,0,209); // impulsion as a function of the energy
-    TH2F *h2 = new TH2F("h2","",800,1,20,800,0,209); // impulsion as a function of the energy
-    TF1 *data = new TF1("data","[0]*x^[1]", 12, 20);
-    data->SetParameter(0, 317.29486);
-    data->SetParameter(1, -0.50594);		
+    TH2F *h1 = new TH2F("h1","",800,1,20,800,0,109); // impulsion as a function of the energy
+    TF1 *data = new TF1("data","[0]*x^[1]", 2, 8);
+    data->SetParameter(0, 118.7339);
+    data->SetParameter(1, -0.500555);		
     data->SetLineColor(kViolet);	
 
     double projB,projb,projs,projS;
@@ -129,7 +123,7 @@ void TOF_Ar_Al() {
         TLorentzVector ppb = *pb ;
         // energies 
         EB=1000.*(ppB.E()-mB); // Ec 
-		//cout << "\n E6Li is equal to " << EB << " MeV" ;
+		//cout << "\n E6Li is equal to " <33.12< EB << " MeV" ;
         Eb=1000.*(ppb.E()-mb);
 		//cout << "\n Ealpha is equal to " << Eb << " MeV" ;
         // angles
@@ -150,51 +144,18 @@ void TOF_Ar_Al() {
         double vB = sqrt((2*EB)/(mB*1000.))*30; //velocity in cm/ns
         //cout << "\n v 15O is equal to " << vB << "cm/ns" ;
 
-        double TOF_b = 225/vb + unif(rng)-4.4;  //28.6 is the distance for which we measure the TOF
-		double TOF_B = 255/vB;
+        double TOF_b = 177/vb + unif(rng)-4.4;  //28.6 is the distance for which we measure the TOF
+		double TOF_B = 200/vB;
         //cout << "\n TOF alpha is equal to " << TOF_b << "ns" ;
 
-
-        /// 15O + alpha -> p+ 18F ///
-		
-		TGenPhaseSpace event2;
-    
-		// final configuration 2 particles B+b
-		Double_t masses2[2] = {mS, ms} ;
-    
-		// generate decay in 2 particles of mass mB and mb
-		event2.SetDecay(W1, 2, masses2);
-	
-        Double_t weight2 = event2.Generate();
-        TLorentzVector *pS = event2.GetDecay(0);
-        TLorentzVector *ps= event2.GetDecay(1);
-        TLorentzVector ppS = *pS ;
-        TLorentzVector pps = *ps ;
-        // energies 
-        ES=1000.*(ppS.E()-mS); // Ec 
-		//cout << "\n E6Li is equal to " << EB << " MeV" ;
-        Es=1000.*(pps.E()-ms);
-		//cout << "\n Ep is equal to " << Es << " MeV" ;
-        // angles
-        projS = ppS.Theta()*57.3; // angle
-        projs = pps.Theta()*57.3; // angle
-
-        double vs = sqrt((2*Es)/(ms*1000.))*3e1; //velocity in cm/ns
-        double vS = sqrt((2*ES)/(mS*1000.))*3e1; //velocity in cm/ns
-
-        double TOF_s = 225/vs+ unif(rng)-4.4;  //28.6 is the distance for which we measure the TOF
-		double TOF_S = 225/vS;
-        //cout << "\n TOF proton is equal to " << TOF_s << "ns" ;
 
 // filling the spectra ************************************
 
         
 		if (Ghoix == 1)
         {
-            h1->Fill(Es, TOF_s); // energy as a function of the angle (MeV)
-            h2->Fill(Eb,TOF_b);
+            h1->Fill(Eb, TOF_b); // energy as a function of the angle (MeV)
             h1->SetMarkerColor(2);
-            h2->SetMarkerColor(4);
         }
     }
 // ***********  END LOOP ********************************
@@ -210,19 +171,14 @@ void TOF_Ar_Al() {
 	if (Ghoix == 1)
     {
     TF1 *fit = new TF1("fit","[0]*(x^[1])",10, -0.5);
-    TF1 *fit2 = new TF1("fit_alpha","[0]*(x^[1])",1737, -1.1);
     //protons
     cout << "protons"<<"\n" ;
-    //h1->Fit("fit");
+    h1->Fit("fit");
     cout << "\n" ;
-    //alpha
-    cout << "alpha"<<"\n" ;
-    //h2->Fit("fit_alpha");
     h1->GetXaxis()->SetTitle("E (MeV)");
     h1->GetYaxis()->SetTitle("TOF (ns)");
     h1->SetMarkerColor(kBlack);
     h1->Draw("colz");
-    h2->Draw("same");
     data->Draw("same");
     }
 	

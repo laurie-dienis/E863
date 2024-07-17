@@ -7,13 +7,13 @@
 #include <iostream>
 #include <vector>
 
-void triple_alpha_source_fit_test() {
-  const int nPeaks = 8; // Number of peaks
-  const int nIterations = 100; // Number of fit iterations
+void triple_alpha_source_fit_Si2() {
+  const int nPeaks = 6; // Number of peaks
+  const int nIterations = 10; // Number of fit iterations
   double i = 1;
 
   // Select the file
-  TFile *f = new TFile("Inputs/E863/Si1_run008.root", "READ");
+  TFile *f = new TFile("Inputs/E863/Si2_run019.root", "READ");
 
   // Check if the file is open successfully
   if (!f || f->IsZombie()) {
@@ -31,7 +31,7 @@ void triple_alpha_source_fit_test() {
   }
 
   // Extract the TH1D histogram from the TCanvas
-  TH1D *histo = dynamic_cast<TH1D *>(canvas->GetPrimitive("hist_si_1"));
+  TH1D *histo = dynamic_cast<TH1D *>(canvas->GetPrimitive("hist_si_2"));
   if (!histo) {
     std::cerr << "TH1D histogram not found in the TCanvas!" << std::endl;
     f->Close();
@@ -53,16 +53,24 @@ void triple_alpha_source_fit_test() {
   }
 
   // Energies of the peaks in keV
-  std::vector<double> energies = {5156.59, 5114.43, 5105.50, 5485.56,
-                                  5442.80, 5388.23, 5804.77, 5762.64};
+  std::vector<double> energies = {5156.59, 5114.43, 5105.50, 
+  5485.56,5442.80, 5388.23, 5352.97, 
+  5804.77, 5762.64};
 
   // Initial guess for parameters: amplitude, mean, sigma for each peak
+  // std::vector<double> initialParams = {
+  //     500, 70735, 100, 200, 70489, 100, 100, 70010, 100,
+
+  //     600, 75208, 100, 300, 75060, 100, 60, 74645, 100, 50, 73900, 100,
+
+  //     350, 79588, 100, 110,  79013, 100};
   std::vector<double> initialParams = {
-      3300, 57232, 100, 1000, 57000, 100, 500, 56670, 100,
+      500, 70735, 100, 200, 70489, 100, 100, 70010, 100,
 
-      4000, 60898, 100, 1500, 60780, 100, 600, 60415, 100,
+      600, 75208, 100, 300, 75060, 100, 
 
-      2700, 64442, 100, 800,  63950, 100};
+      350, 79588, 100};
+
 
   // Gaussian fit with nPeaks components
   std::string formula = "";
@@ -76,11 +84,13 @@ void triple_alpha_source_fit_test() {
   TF1 *fitFunction =
       new TF1("fitFunction", formula.c_str(), histo->GetXaxis()->GetXmin(),
               histo->GetXaxis()->GetXmax());
+  fitFunction->SetNpx(2000);
 
   for (int j = 0; j < nPeaks; ++j) {
     fitFunction->SetParameter(j * 3, initialParams[j * 3]);
     fitFunction->SetParameter(j * 3 + 1, initialParams[j * 3 + 1]);
     fitFunction->SetParameter(j * 3 + 2, initialParams[j * 3 + 2]);
+    fitFunction->SetParLimits(j*3+2,80,89);
   }
 
   fitFunction->SetLineColor(kBlue);
@@ -125,7 +135,8 @@ void triple_alpha_source_fit_test() {
   }
   graph->Fit(linearFit, "QR");
 
-  double slope = linearFit->GetParameter(0);
+  //double slope = linearFit->GetParameter(0);
+  double slope = 0.0736969;
 
   double avgSigma = 0;
   double sum_errors_squared = 0;
@@ -148,10 +159,10 @@ void triple_alpha_source_fit_test() {
   histo->Draw();
 
   // Create a new canvas for the linear fit plot
-  auto *c1 = new TCanvas("c1", "Energy vs Channel");
-  graph->SetTitle("Energy vs Channel;Channel;Energy (keV)");
-  graph->Draw("AP");
-  linearFit->Draw("same");
+  //auto *c1 = new TCanvas("c1", "Energy vs Channel");
+  //graph->SetTitle("Energy vs Channel;Channel;Energy (keV)");
+  //graph->Draw("AP");
+  //linearFit->Draw("same");
 
   // Close the file
   f->Close();

@@ -124,40 +124,88 @@ void Pipe2_main_PID() {
     // TF1 *line2 = new TF1("line2","534.226*x^(-0.493824)-200",0, 20);
     // line2->SetLineColor(kBlue);
     // line2->Draw("same");
+
+    //////////////Al dist deg-si 575 /////////////
+    // //protons
+    // TF1 *line1 = new TF1("line1","(413.578*x^(-0.494904))-27",11.11, 20);
+    // line1->SetLineColor(kCyan);
+    // line1->SetLineWidth(4);
+    // line1->Draw("same");
     
-    //protons
-    TF1 *line1 = new TF1("line1","(413.578*x^(-0.494904))-27",11.11, 20);
-    line1->SetLineColor(kCyan);
-    line1->SetLineWidth(4);
-    line1->Draw("same");
+    // //alpha
+    // TF1 *line2 = new TF1("line2","(2481.*x^(-1.22641))+5",11.3, 20);
+    // line2->SetLineColor(kViolet);
+    // line2->SetLineWidth(4);
+    // line2->Draw("same");
+    
+    //////////////Al in col //////////////////
+    // //protons
+    // TF1 *line1 = new TF1("line1","(26.8864*x^(-0.439753))+62",13.3, 20);
+    // line1->SetLineColor(kCyan);
+    // line1->SetLineWidth(4);
+    // line1->Draw("same");
+    
+    // //alpha
+    // TF1 *line2 = new TF1("line2","(53.4505*x^(-0.463471))+56",11.3, 20);
+    // line2->SetLineColor(kViolet);
+    // line2->SetLineWidth(4);
+    // line2->Draw("same");
+    
+    ///////Al dist deg-si 225 ///////////////
+    // //protons
+    // TF1 *line1 = new TF1("line1","(169.509*x^(-0.546324))",14.67, 20);
+    // line1->SetLineColor(kCyan);
+    // line1->SetLineWidth(4);
+    // line1->Draw("same");
     
     //alpha
-    TF1 *line2 = new TF1("line2","(2481.*x^(-1.22641))+5",11.3, 20);
+    TF1 *line2 = new TF1("line2","(329.41*x^(-0.521455))+5",11.9, 20);
     line2->SetLineColor(kViolet);
     line2->SetLineWidth(4);
     line2->Draw("same");
     
-    //protons
-    TF1 *line3 = new TF1("line3","22.3705*x^(-0.427282)",0, 20);
-    line3->SetLineColor(kOrange);
-    line3->SetLineWidth(4);
-    line3->Draw("same");
+    ////////Ti///////////////
+    // //protons
+    // TF1 *line3 = new TF1("line3","22.1702*x^(-0.722957)",0, 20);
+    // line3->SetLineColor(kOrange);
+    // line3->SetLineWidth(4);
+    // line3->Draw("same");
     
-    //alpha
-    TF1 *line4 = new TF1("line4","44.6592*x^(-0.461368)",0, 20);
-    line4->SetLineColor(kOrange+7);
-    line4->SetLineWidth(4);
-    line4->Draw("same");
+    // //alpha
+    // TF1 *line4 = new TF1("line4","45.6722*x^(-0.592348)",0, 20);
+    // line4->SetLineColor(kOrange+7);
+    // line4->SetLineWidth(4);
+    // line4->Draw("same");
     
+
+    //////////////He gas////////////
     // TF1 *line5 = new TF1("line5","18.34*x^(-0.374257)",0, 20);
     // line5->SetLineColor(kViolet);
     // line5->Draw("same");
 
-    //alpha
-    TF1 *line6 = new TF1("line6","41.85433*x^(-0.47297)",0, 20);
-    line6->SetLineColor(kGreen);
-    line6->SetLineWidth(4);
-    line6->Draw("same");
+    // //alpha
+    // TF1 *line6 = new TF1("line6","41.85433*x^(-0.47297)",0, 20);
+    // line6->SetLineColor(kGreen);
+    // line6->SetLineWidth(4);
+    // line6->Draw("same");
+
+    /////////Carbon/////////////
+    // TF1 *line3 = new TF1("line3","132.548*x^(-0.553591)",9.03, 20);
+    // line3->SetLineColor(kOrange);
+    // line3->SetLineWidth(4);
+    // line3->Draw("same");
+
+    /////////Fer//////////
+    TF1 *line4 = new TF1("line4","126.18*x^(-0.533189)",0, 20);
+    line4->SetLineColor(kCyan);
+    line4->SetLineWidth(4);
+    line4->Draw("same");
+
+    ////////Chromium///////////
+    // TF1 *line6 = new TF1("line6","126.165*x^(-0.533174)",0, 20);
+    // line6->SetLineColor(kGreen);
+    // line6->SetLineWidth(4);
+    // line6->Draw("same");
 
     // Plot the cut if it exists
     if (cutG) {

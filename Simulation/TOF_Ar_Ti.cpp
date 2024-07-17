@@ -77,8 +77,8 @@ void TOF_Ar_Ti() {
 	std::uniform_real_distribution<double> unif2(1,239);
     
 	// definition of the 2D and 1D spectra
-    TH2F *h1 = new TH2F("h1","",800,1,100,800,0,160); // impulsion as a function of the energy
-    TH2F *h2 = new TH2F("h2","",800,1,100,800,0,160); // impulsion as a function of the energy
+    TH2F *h1 = new TH2F("h1","",800,1,20,800,0,109); // impulsion as a function of the energy
+    TH2F *h2 = new TH2F("h2","",800,1,20,800,0,109); // impulsion as a function of the energy
             
 			
 
@@ -148,8 +148,8 @@ void TOF_Ar_Ti() {
         double vB = sqrt((2*EB)/(mB*1000.))*30; //velocity in cm/ns
         //cout << "\n v 15O is equal to " << vB << "cm/ns" ;
 
-        double TOF_b = 31.12/vb + unif(rng);  //28.6 is the distance for which we measure the TOF
-		double TOF_B = 31.12/vB;
+        double TOF_b = 33.12/vb + unif(rng)-4.4;  //28.6 is the distance for which we measure the TOF
+		double TOF_B = 33.12/vB;
         //cout << "\n TOF alpha is equal to " << TOF_b << "ns" ;
 
 
@@ -180,8 +180,8 @@ void TOF_Ar_Ti() {
         double vs = sqrt((2*Es)/(ms*1000.))*3e1; //velocity in cm/ns
         double vS = sqrt((2*ES)/(mS*1000.))*3e1; //velocity in cm/ns
 
-        double TOF_s = 31.12/vs+ unif(rng);  //28.6 is the distance for which we measure the TOF
-		double TOF_S = 31.12/vS;
+        double TOF_s = 33.12/vs+ unif(rng)-4.4;  //28.6 is the distance for which we measure the TOF
+		double TOF_S = 33.12/vS;
         //cout << "\n TOF proton is equal to " << TOF_s << "ns" ;
 
 // filling the spectra ************************************

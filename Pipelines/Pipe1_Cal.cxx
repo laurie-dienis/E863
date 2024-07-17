@@ -15,7 +15,7 @@ void Pipe1_Cal(){
 
   // List of file names
   std::vector<std::string> fileNames = {
-      "faster-to-root/root/run_008.root",
+      "faster-to-root/root/run_019.root",
      // "faster-to-root/root/run_006.root",
       //"RootFiles/Raw/run_test2.root",
   };
@@ -27,14 +27,14 @@ void Pipe1_Cal(){
   double si_cal_1;
   double tac_cal_1;
   double faster_time_1;
-  double cal_parameter_Si_1 = 0.089835397376795;
+  double cal_parameter_Si_1 = 0.0911739;
   double cal_parameter_tac_1 = 0.000104980380496;
   
   double si_2;
   double tac_2;
   double si_cal_2;
   double tac_cal_2;
-  double cal_parameter_Si_2 = 0.072584784736795;
+  double cal_parameter_Si_2 = 0.0736969;
   double cal_parameter_tac_2 = 0.000100758959842;
 
   // Create histograms
@@ -155,7 +155,7 @@ void Pipe1_Cal(){
   c10->SaveAs("hist_si.png");
   
   TCanvas *c17 = new TCanvas("c17", "SI_1 Histogram", 800, 600);
-  hist_si_1->Draw();
+  hist_si_2->Draw();
 
   // TCanvas *c11 = new TCanvas("c11", "TAC Histogram", 800, 600);
   // c11->DivideSquare(2);

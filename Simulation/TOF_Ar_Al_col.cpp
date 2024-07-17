@@ -15,7 +15,7 @@
 #include "mass.hpp"
 
 
-void TOF_Ar_Al() {
+void TOF_Ar_Al_col() {
     
     // *******************************************
     // variables
@@ -74,15 +74,13 @@ void TOF_Ar_Al() {
     
     //random for E lab 6MeV/u until 0.35 MeV/u
 	std::mt19937_64 rng2;
-	std::uniform_real_distribution<double> unif2(23.01,250);
+	std::uniform_real_distribution<double> unif2(18.01,250);
     
 	// definition of the 2D and 1D spectra
     TH2F *h1 = new TH2F("h1","",800,1,20,800,0,209); // impulsion as a function of the energy
     TH2F *h2 = new TH2F("h2","",800,1,20,800,0,209); // impulsion as a function of the energy
-    TF1 *data = new TF1("data","[0]*x^[1]", 12, 20);
-    data->SetParameter(0, 317.29486);
-    data->SetParameter(1, -0.50594);		
-    data->SetLineColor(kViolet);	
+            
+			
 
     double projB,projb,projs,projS;
     TLorentzVector ppx, difas;
@@ -150,8 +148,8 @@ void TOF_Ar_Al() {
         double vB = sqrt((2*EB)/(mB*1000.))*30; //velocity in cm/ns
         //cout << "\n v 15O is equal to " << vB << "cm/ns" ;
 
-        double TOF_b = 225/vb + unif(rng)-4.4;  //28.6 is the distance for which we measure the TOF
-		double TOF_B = 255/vB;
+        double TOF_b = 38.17/vb + unif(rng);  //28.6 is the distance for which we measure the TOF
+		double TOF_B = 38.17/vB;
         //cout << "\n TOF alpha is equal to " << TOF_b << "ns" ;
 
 
@@ -182,8 +180,8 @@ void TOF_Ar_Al() {
         double vs = sqrt((2*Es)/(ms*1000.))*3e1; //velocity in cm/ns
         double vS = sqrt((2*ES)/(mS*1000.))*3e1; //velocity in cm/ns
 
-        double TOF_s = 225/vs+ unif(rng)-4.4;  //28.6 is the distance for which we measure the TOF
-		double TOF_S = 225/vS;
+        double TOF_s = 38.17/vs+ unif(rng);  //28.6 is the distance for which we measure the TOF
+		double TOF_S = 38.17/vS;
         //cout << "\n TOF proton is equal to " << TOF_s << "ns" ;
 
 // filling the spectra ************************************
@@ -217,13 +215,12 @@ void TOF_Ar_Al() {
     cout << "\n" ;
     //alpha
     cout << "alpha"<<"\n" ;
-    //h2->Fit("fit_alpha");
+    h2->Fit("fit_alpha");
     h1->GetXaxis()->SetTitle("E (MeV)");
     h1->GetYaxis()->SetTitle("TOF (ns)");
     h1->SetMarkerColor(kBlack);
     h1->Draw("colz");
     h2->Draw("same");
-    data->Draw("same");
     }
 	
     
