@@ -9,7 +9,7 @@
 
 void triple_alpha_source_fit_Si1() {
   const int nPeaks = 9; // Number of peaks
-  const int nIterations = 10; // Number of fit iterations
+  const int nIterations = 100; // Number of fit iterations
   double i = 1;
 
   // Select the file
@@ -83,25 +83,92 @@ void triple_alpha_source_fit_Si1() {
     fitFunction->SetParameter(j * 3, initialParams[j * 3]);
     fitFunction->SetParameter(j * 3 + 1, initialParams[j * 3 + 1]);
     fitFunction->SetParameter(j * 3 + 2, initialParams[j * 3 + 2]);
-    fitFunction->SetParLimits(j*3+2,70,73.2);
+    fitFunction->SetParLimits(j*3+2,60,73.2);
   }
 
   fitFunction->SetLineColor(kBlue);
   fitFunction->SetLineWidth(3);
   histo->Rebin(2);
-  // Perform multiple fit iterations
+  //histo->Sumw2(); // Use statistical weights
+  double bestAvgSigma = std::numeric_limits<double>::max();
+  std::vector<double> bestParams(initialParams);
+
+  
+  // Perform multiple fit iterations with adaptive step size
   for (int iter = 0; iter < nIterations; ++iter) {
     std::cout << "Iteration " << iter + 1 << std::endl;
     histo->Fit(fitFunction, "R");
 
     // Extract the fit parameters and use them as initial guesses for the next
     // iteration
+    std::vector<double> currentParams;
+    double currentAvgSigma = 0;
+    double sum_errors_squared = 0;
+
     for (int j = 0; j < nPeaks; ++j) {
-      initialParams[j * 3] = fitFunction->GetParameter(j * 3);
-      initialParams[j * 3 + 1] = fitFunction->GetParameter(j * 3 + 1);
-      initialParams[j * 3 + 2] = fitFunction->GetParameter(j * 3 + 2);
+      double sigma = fitFunction->GetParameter(j * 3 + 2);
+      double err_sigma = fitFunction->GetParError(j * 3 + 2);
+      currentAvgSigma += std::abs(sigma);
+      sum_errors_squared += pow(err_sigma, 2);
+      currentParams.push_back(fitFunction->GetParameter(j * 3));
+      currentParams.push_back(fitFunction->GetParameter(j * 3 + 1));
+      currentParams.push_back(sigma);
+    }
+
+    currentAvgSigma = (currentAvgSigma / nPeaks) * 0.0911739; // Adjust slope factor here
+    double currentAvgErr = sqrt(sum_errors_squared / nPeaks);
+
+    if (currentAvgSigma < bestAvgSigma) {
+      bestAvgSigma = currentAvgSigma;
+      bestParams = currentParams;
+    }
+
+    std::cout << "Current avg sigma: " << currentAvgSigma << " keV" << std::endl;
+    std::cout << "Current avg error: " << currentAvgErr << " keV" << std::endl;
+
+    // Adjust initial parameters based on current fit
+    for (int j = 0; j < nPeaks; ++j) {
+      initialParams[j * 3] = currentParams[j * 3];
+      initialParams[j * 3 + 1] = currentParams[j * 3 + 1];
+      initialParams[j * 3 + 2] = currentParams[j * 3 + 2];
+    }
+
+    // Adaptive step size adjustment
+    for (int j = 0; j < nPeaks; ++j) {
+      double adjustment = 1.0;
+      if (fitFunction->GetParError(j * 3 + 2) > currentAvgErr) {
+        adjustment *= 0.999; // Decrease step size if error increased
+      } else {
+        adjustment *= 1.001; // Increase step size if error decreased
+      }
+      fitFunction->SetParameter(j * 3, initialParams[j * 3] * adjustment);
+      fitFunction->SetParameter(j * 3 + 1, initialParams[j * 3 + 1] * adjustment);
+      fitFunction->SetParameter(j * 3 + 2, initialParams[j * 3 + 2] * adjustment);
     }
   }
+
+  // Apply best parameters to fit function
+  for (int j = 0; j < nPeaks; ++j) {
+    fitFunction->SetParameter(j * 3, bestParams[j * 3]);
+    fitFunction->SetParameter(j * 3 + 1, bestParams[j * 3 + 1]);
+    fitFunction->SetParameter(j * 3 + 2, bestParams[j * 3 + 2]);
+  }
+
+  histo->Fit(fitFunction, "R"); // Final fit with best parameters
+  
+  // // Perform multiple fit iterations
+  // for (int iter = 0; iter < nIterations; ++iter) {
+  //   std::cout << "Iteration " << iter + 1 << std::endl;
+  //   histo->Fit(fitFunction, "R");
+
+  //   // Extract the fit parameters and use them as initial guesses for the next
+  //   // iteration
+  //   for (int j = 0; j < nPeaks; ++j) {
+  //     initialParams[j * 3] = fitFunction->GetParameter(j * 3);
+  //     initialParams[j * 3 + 1] = fitFunction->GetParameter(j * 3 + 1);
+  //     initialParams[j * 3 + 2] = fitFunction->GetParameter(j * 3 + 2);
+  //   }
+  // }
   //histo->Fit(fitFunction, "R");
 
   std::vector<double> means(nPeaks);

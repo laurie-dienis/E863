@@ -39,9 +39,10 @@ void Pipe1_Cal(){
 
   // Create histograms
   //TH1F *hist_si_1 = new TH1F("hist_si_1", "SI Histogram 1", 10000, 0, 220000);
-  TH1D *hist_si_1 = new TH1D("hist_si_1", "SI Histogram 1", 300, 56000, 65000);
+  TH1D *hist_si_1 = new TH1D("hist_si_1", "SI Histogram 1", 500, 56000, 65000);
   TH1F *hist_tac_1 = new TH1F("hist_tac_1", "TAC Histogram 1", 7000, 0, 850000);
-  TH1F *hist_si_cal_1 = new TH1F("hist_si_cal_1", "SI Calibrated Histogram 1", 2000, 1, 22);
+  // TH1F *hist_si_cal_1 = new TH1F("hist_si_cal_1", "SI Calibrated Histogram 1", 2000, 1, 22);
+  TH1F *hist_si_cal_1 = new TH1F("hist_si_cal_1", "SI Calibrated Histogram 1", 500, 5, 6);
   TH1F *hist_tac_cal_1 = new TH1F("hist_tac_cal_1", "TAC calibrated Histogram 1", 5000, 0, 80);
   
   //TH1F *hist_si_2 = new TH1F("hist_si_2", "SI Histogram 2", 10000, 0, 220000);
@@ -155,15 +156,16 @@ void Pipe1_Cal(){
   c10->SaveAs("hist_si.png");
   
   TCanvas *c17 = new TCanvas("c17", "SI_1 Histogram", 800, 600);
-  hist_si_2->Draw();
+  hist_si_1->GetXaxis()->SetTitle("E (arb. units)"); 
+  hist_si_1->Draw();
 
-  // TCanvas *c11 = new TCanvas("c11", "TAC Histogram", 800, 600);
-  // c11->DivideSquare(2);
-  // c11->cd(1);
-  // hist_tac_1->Draw();
-  // c11->cd(2);
-  // hist_tac_2->Draw();
-  // c11->SaveAs("hist_tac.png");
+  TCanvas *c11 = new TCanvas("c11", "TAC Histogram", 800, 600);
+  c11->DivideSquare(2);
+  c11->cd(1);
+  hist_tac_1->Draw();
+  c11->cd(2);
+  hist_tac_2->Draw();
+  c11->SaveAs("hist_tac.png");
 
   // TCanvas *c12 = new TCanvas("c12", "SI Calibrated Histogram n1", 800, 600);
   // hist_si_cal_1->GetXaxis()->SetTitle("E (MeV)"); 
@@ -173,12 +175,17 @@ void Pipe1_Cal(){
   // TCanvas *c13 = new TCanvas("c13", "SI Calibrated Histogram n2", 800, 600);
   // hist_si_cal_2->GetXaxis()->SetTitle("E (MeV)"); 
   // hist_si_cal_2->Draw();
-  // c13->SaveAs("si_cal_1.png");
+  // c13->SaveAs("si_cal_2.png");
   
-  // TCanvas *c14 = new TCanvas("c14", "TAC Calibrated Histogram n1", 800, 600);
-  // hist_tac_cal_1->GetXaxis()->SetTitle("TOF (s)"); 
-  // hist_tac_cal_1->Draw();
-  // c14->SaveAs("tac_cal_1.png");
+  TCanvas *c13 = new TCanvas("c13", "TAC unCalibrated Histogram n1", 800, 600);
+  hist_tac_1->GetXaxis()->SetTitle("time (arb. units)"); 
+  hist_tac_1->Draw();
+  c13->SaveAs("tac_cal_1.png");
+  
+  TCanvas *c14 = new TCanvas("c14", "TAC Calibrated Histogram n1", 800, 600);
+  hist_tac_cal_1->GetXaxis()->SetTitle("time (ns)"); 
+  hist_tac_cal_1->Draw();
+  c14->SaveAs("tac_cal_1.png");
   
   // TCanvas *c15 = new TCanvas("c15", "TAC Calibrated Histogram n2", 800, 600);
   // hist_tac_cal_2->GetXaxis()->SetTitle("TOF (s)"); 
