@@ -152,24 +152,24 @@ void Pipe2_main_PID() {
     // line2->Draw("same");
     
     ///////Al dist deg-si 225 ///////////////
-    // //protons
-    // TF1 *line1 = new TF1("line1","(169.509*x^(-0.546324))",14.67, 20);
-    // line1->SetLineColor(kCyan);
-    // line1->SetLineWidth(4);
-    // line1->Draw("same");
+    //alphas
+    TF1 *line1 = new TF1("line1","(17.7668*x^(0.563115))-10",5.2, 20);
+    line1->SetLineColor(kBlue);
+    line1->SetLineWidth(4);
+    line1->Draw("same");
     
     //alpha
-    TF1 *line2 = new TF1("line2","(329.41*x^(-0.521455))+5",11.9, 20);
+    TF1 *line2 = new TF1("line2","(329.41*x^(-0.521455))",11.9, 20);
     line2->SetLineColor(kViolet);
     line2->SetLineWidth(4);
     line2->Draw("same");
     
     ////////Ti///////////////
     // //protons
-    // TF1 *line3 = new TF1("line3","22.1702*x^(-0.722957)",0, 20);
-    // line3->SetLineColor(kOrange);
-    // line3->SetLineWidth(4);
-    // line3->Draw("same");
+    TF1 *line3 = new TF1("line3","22.1702*x^(-0.722957)+70",2.3, 7.4);
+    line3->SetLineColor(kOrange);
+    line3->SetLineWidth(4);
+    line3->Draw("same");
     
     // //alpha
     // TF1 *line4 = new TF1("line4","45.6722*x^(-0.592348)",0, 20);
@@ -184,7 +184,7 @@ void Pipe2_main_PID() {
     // line5->Draw("same");
 
     // //alpha
-    // TF1 *line6 = new TF1("line6","41.85433*x^(-0.47297)",0, 20);
+    // TF1 *line6 = new TF1("line6","41.85433*x^(-0.47297)+60",0, 20);
     // line6->SetLineColor(kGreen);
     // line6->SetLineWidth(4);
     // line6->Draw("same");
@@ -196,10 +196,14 @@ void Pipe2_main_PID() {
     // line3->Draw("same");
 
     /////////Fer//////////
-    TF1 *line4 = new TF1("line4","126.18*x^(-0.533189)",0, 20);
+    TF1 *line4 = new TF1("line4","126.18*x^(-0.533189)",2.3, 7.9);
     line4->SetLineColor(kCyan);
     line4->SetLineWidth(4);
     line4->Draw("same");
+    TF1 *line5 = new TF1("line5","13.6*x^(0.659725)",0, 7.9);
+    line5->SetLineColor(kCyan);
+    line5->SetLineWidth(4);
+    line5->Draw("same");
 
     ////////Chromium///////////
     // TF1 *line6 = new TF1("line6","126.165*x^(-0.533174)",0, 20);

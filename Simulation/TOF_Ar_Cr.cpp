@@ -15,6 +15,93 @@
 #include "mass.hpp"
 
 
+//***************************************
+//Extraction function for SRIM Stop. Pow.
+//***************************************
+int extraction_data_SRIM(const Char_t *file, Double_t EnergyPart[], Double_t RangePart_in_Au[], Double_t SPelPart_in_Au[], Double_t SPnuPart_in_Au[]) {
+    std::ifstream in;
+    in.open(file);
+    Int_t nlines = 0;
+    while (1) {
+        in >> EnergyPart[nlines] >> SPelPart_in_Au[nlines] >> SPnuPart_in_Au[nlines] >> RangePart_in_Au[nlines]; // SP in keV/microns, E in keV, Range in Angstrom
+    	//std::cout<< EnergyPart[nlines] <<" E  "<<std::endl;
+        if (!in.good()) break;
+        nlines++;
+    }
+    in.close();
+    return 1;
+}
+
+
+//***************************************
+//Interpolation on SRIM Stop. Pow.
+//***************************************
+double interpol(double x[], double y[], int const n, double p)
+{
+    int i = 1;
+    double val, b1, c1, d1, c2, d2;
+    // b1 false if something is wrong
+    bool bb1 = true;
+    // loop breaking
+    bool bb2 = true;
+    if (p <= x[1])
+    {
+        bb1 = false;
+    }
+    else
+    {
+        do
+        {
+            i++;
+            if (p <= x[i])bb2 = false;
+        } while (bb2 && (i < n - 2));
+    }
+    if (p > x[n - 2])bb1 = false;
+    if (bb1 == true)
+    {
+        b1 = (y[i - 1] - y[i - 2]) / (x[i - 1] - x[i - 2]);
+        b1 = b1 * p - b1 * x[i - 2] + y[i - 2];
+        c1 = (y[i] - y[i - 2]) / (x[i] - x[i - 2]);
+        c1 = c1 * p - c1 * x[i - 2] + y[i - 2];
+        d1 = (y[i + 1] - y[i - 2]) / (x[i + 1] - x[i - 2]);
+        d1 = d1 * p - d1 * x[i - 2] + y[i - 2];
+        c2 = (c1 - b1) / (x[i] - x[i - 1]);
+        c2 = c2 * p - c2 * x[i - 1] + b1;
+        d2 = (d1 - b1) / (x[i + 1] - x[i - 1]);
+        d2 = d2 * p - d2 * x[i - 1] + b1;
+        val = (d2 - c2) / (x[i] - x[i - 1]);
+        val = val * p - val * x[i] + c2;
+    }
+    else
+    {
+        val = 0.;
+    }
+    return val;
+}
+
+
+//***************************************
+// Local derivation of energy losses
+// energy in MeV, distance in mm,
+// Sto. Pow. in keV/microns
+//***************************************
+double loss_E_srim(double Ei, double distance, Double_t EnergyPart[], Double_t SPel_Part[], Double_t SPnu_Part[], int N_energy) {
+    //distance in mm
+    double Etemp = Ei;
+    double dpart = 0;
+    double ddx = 1; //micron
+    while (dpart <= distance*1000) {
+        Etemp = Etemp - 0.001 * interpol(EnergyPart, SPel_Part, N_energy, Etemp * 1000.0) * ddx - 0.001 * interpol(EnergyPart, SPnu_Part, N_energy, Etemp * 1000.0) * ddx;
+        //std::cout<< interpol(EnergyPart, SPel_Part, N_energy, Etemp * 1000.0)  <<" interpol  "<<std::endl;
+        //std::cout<< Etemp * 1000.0  <<" interpol  "<<std::endl;
+        dpart = dpart + ddx;
+    }
+    //std::cout <<" \n  "<<std::endl;
+    //std::cout<< Etemp <<" Etemp  "<<std::endl;
+    return Ei - Etemp;
+}
+
+
 void TOF_Ar_Cr() {
     
     // *******************************************
@@ -27,7 +114,7 @@ void TOF_Ar_Cr() {
 	// Reaction B --> S + s
 	// Reaction 6Li* --> alpha + d
     // *******************************************
-    int iter=1000000;
+    int iter=10000;
     int Ghoix=1; // Ghoix = 1 : p(E) impulsion as a function of the energy 
 				 // Ghoix = 2 : angular distribution for 6Li and p 
 				 // Ghoix = 3 : E(6Li) as a function of Ep 
@@ -37,6 +124,15 @@ void TOF_Ar_Cr() {
     
     // variables
     double Elab,Ee,Qreac,Qreac2,target_thickness;
+    
+    int extraction_data;
+    int N_energy = 132;
+    const Char_t *fileSRIM ={"sp_srim/H_Si.dat"};
+    Double_t EnergyRecoil[132];     
+    Double_t RangeRecoil_in_Si[132];    
+    Double_t SPelRecoil_in_Si[132];    
+    Double_t SPnuRecoil_in_Si[132];
+    extraction_data = extraction_data_SRIM(fileSRIM, EnergyRecoil, RangeRecoil_in_Si,SPelRecoil_in_Si, SPnuRecoil_in_Si);
 
     // Reaction p(6Li,p')6Li*
         Elab=23;  //1.8 MeV/u 27MeV
@@ -73,10 +169,15 @@ void TOF_Ar_Cr() {
     
 	// definition of the 2D and 1D spectra
     TH2F *h1 = new TH2F("h1","",800,1,20,800,0,109); // impulsion as a function of the energy
-    TF1 *data = new TF1("data","[0]*x^[1]", 2, 8);
+    TF1 *data = new TF1("data","[0]*x^[1]", 2, 8.3);
     data->SetParameter(0, 118.7339);
     data->SetParameter(1, -0.500555);		
     data->SetLineColor(kViolet);	
+    TF1 *data2 = new TF1("data2","[0]+x*[1+x*x[2]", 2, 8.3);
+    data2->SetParameter(0, -32.48);
+    data2->SetParameter(1, 9.0437);		
+    data2->SetParameter(2, -0.401009);		
+    data2->SetLineColor(kViolet);	
 
     double projB,projb,projs,projS;
     TLorentzVector ppx, difas;
@@ -144,9 +245,12 @@ void TOF_Ar_Cr() {
         double vB = sqrt((2*EB)/(mB*1000.))*30; //velocity in cm/ns
         //cout << "\n v 15O is equal to " << vB << "cm/ns" ;
 
-        double TOF_b = 177/vb + unif(rng)-4.4;  //28.6 is the distance for which we measure the TOF
+        double TOF_b = 180/vb + unif(rng)-4.4;  //28.6 is the distance for which we measure the TOF
 		double TOF_B = 200/vB;
-        //cout << "\n TOF alpha is equal to " << TOF_b << "ns" ;
+        
+        double ELoss = loss_E_srim(Eb, 0.5, EnergyRecoil, SPelRecoil_in_Si, SPnuRecoil_in_Si, N_energy);
+        //cout << "\n ELoss " << ELoss*1000 << " MeV" ;
+        double Eb = ELoss;
 
 
 // filling the spectra ************************************
@@ -180,6 +284,7 @@ void TOF_Ar_Cr() {
     h1->SetMarkerColor(kBlack);
     h1->Draw("colz");
     data->Draw("same");
+    data2->Draw("same");
     }
 	
     
