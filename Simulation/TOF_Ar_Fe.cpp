@@ -112,7 +112,7 @@ void TOF_Ar_Fe() {
 	// Reaction B --> S + s
 	// Reaction 6Li* --> alpha + d
     // *******************************************
-    int iter=100000;
+    int iter=10000;
     int Ghoix=1; // Ghoix = 1 : p(E) impulsion as a function of the energy 
 				 // Ghoix = 2 : angular distribution for 6Li and p 
 				 // Ghoix = 3 : E(6Li) as a function of Ep 
@@ -167,10 +167,15 @@ void TOF_Ar_Fe() {
     
 	// definition of the 2D and 1D spectra
     TH2F *h1 = new TH2F("h1","",800,1,20,800,0,109); // impulsion as a function of the energy
-    TF1 *data = new TF1("data","[0]*x^[1]", 2, 8);
+    TF1 *data = new TF1("data","[0]*x^[1]", 2, 18);
     data->SetParameter(0, 118.7339);
     data->SetParameter(1, -0.500555);		
     data->SetLineColor(kViolet);	
+    TF1 *data2 = new TF1("data2","[0]+x*[1+x*x[2]", 2, 8.3);
+    data2->SetParameter(0, -32.48);
+    data2->SetParameter(1, 9.0437);		
+    data2->SetParameter(2, -0.401009);		
+    data2->SetLineColor(kViolet);	
 
     double projB,projb,projs,projS;
     TLorentzVector ppx, difas;
@@ -278,6 +283,7 @@ void TOF_Ar_Fe() {
     h1->SetMarkerColor(kBlack);
     h1->Draw("colz");
     data->Draw("same");
+    data2->Draw("same");
     }
 	
     

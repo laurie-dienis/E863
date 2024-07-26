@@ -89,7 +89,7 @@ double loss_E_srim(double Ei, double distance, Double_t EnergyPart[], Double_t S
     //distance in mm
     double Etemp = Ei;
     double dpart = 0;
-    double ddx = 10.0; //micron
+    double ddx = 1.0; //micron
     while (dpart <= distance*1000) {
         Etemp = Etemp - 0.001 * interpol(EnergyPart, SPel_Part, N_energy, Etemp * 1000.0) * ddx - 0.001 * interpol(EnergyPart, SPnu_Part, N_energy, Etemp * 1000.0) * ddx;
         //std::cout<< interpol(EnergyPart, SPel_Part, N_energy, Etemp * 1000.0)  <<" interpol  "<<std::endl;
@@ -113,7 +113,7 @@ void TOF_Ar_Al() {
 	// Reaction B --> S + s
 	// Reaction 6Li* --> alpha + d
     // *******************************************
-    int iter=100000;
+    int iter=10000;
     int Ghoix=1; // Ghoix = 1 : p(E) impulsion as a function of the energy 
 				 // Ghoix = 2 : angular distribution for 6Li and p 
 				 // Ghoix = 3 : E(6Li) as a function of Ep 
@@ -172,8 +172,8 @@ void TOF_Ar_Al() {
 	std::uniform_real_distribution<double> unif2(23.01,250);
     
 	// definition of the 2D and 1D spectra
-    TH2F *h1 = new TH2F("h1","",800,1,50,800,0,109); // impulsion as a function of the energy
-    TH2F *h2 = new TH2F("h2","",800,1,50,800,0,109); // impulsion as a function of the energy
+    TH2F *h1 = new TH2F("h1","",800,4,20,800,0,60); // impulsion as a function of the energy
+    TH2F *h2 = new TH2F("h2","",800,4,20,800,0,60); // impulsion as a function of the energy
     TF1 *data = new TF1("data","[0]*x^[1]", 12, 20);
     data->SetParameter(0, 317.29486);
     data->SetParameter(1, -0.50594);		
@@ -245,7 +245,7 @@ void TOF_Ar_Al() {
         double vB = sqrt((2*EB)/(mB*1000.))*30; //velocity in cm/ns
         //cout << "\n v 15O is equal to " << vB << "cm/ns" ;
 
-        double TOF_b = 255/vb + unif(rng)-4.4;  //28.6 is the distance for which we measure the TOF
+        double TOF_b = 255/vb + unif(rng)-15.4;  //28.6 is the distance for which we measure the TOF
 		double TOF_B = 255/vB;
         //cout << "\n TOF alpha is equal to " << TOF_b << "ns" ;
 
@@ -312,7 +312,7 @@ void TOF_Ar_Al() {
 	if (Ghoix == 1)
     {
     TF1 *fit = new TF1("fit","[0]*(x^[1])",10, -0.5);
-    TF1 *fit2 = new TF1("fit_alpha","[0]*(x^[1])",1737, -1.1);
+    TF1 *fit2 = new TF1("fit_alpha","[0]+[1]*x+[2]*x*x", 0, 20);
     //protons
     cout << "protons"<<"\n" ;
     //h1->Fit("fit");

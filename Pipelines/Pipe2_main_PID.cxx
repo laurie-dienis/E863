@@ -153,10 +153,10 @@ void Pipe2_main_PID() {
     
     ///////Al dist deg-si 225 ///////////////
     //alphas
-    TF1 *line1 = new TF1("line1","(17.7668*x^(0.563115))-10",5.2, 20);
-    line1->SetLineColor(kBlue);
-    line1->SetLineWidth(4);
-    line1->Draw("same");
+    // TF1 *line1 = new TF1("line1","(-3.79063+x*3.76577+x*x*(-0.0706469))+25",5.2, 20);
+    // line1->SetLineColor(kBlue);
+    // line1->SetLineWidth(4);
+    // line1->Draw("same");
     
     //alpha
     TF1 *line2 = new TF1("line2","(329.41*x^(-0.521455))",11.9, 20);
@@ -200,10 +200,10 @@ void Pipe2_main_PID() {
     line4->SetLineColor(kCyan);
     line4->SetLineWidth(4);
     line4->Draw("same");
-    TF1 *line5 = new TF1("line5","13.6*x^(0.659725)",0, 7.9);
-    line5->SetLineColor(kCyan);
-    line5->SetLineWidth(4);
-    line5->Draw("same");
+    // TF1 *line5 = new TF1("line5","13.52*x^(0.672484)",0, 7.9);
+    // line5->SetLineColor(kCyan);
+    // line5->SetLineWidth(4);
+    // line5->Draw("same");
 
     ////////Chromium///////////
     // TF1 *line6 = new TF1("line6","126.165*x^(-0.533174)",0, 20);
