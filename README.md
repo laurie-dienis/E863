@@ -6,7 +6,7 @@ Code of the analysis of the experiment e863, a resonant elastic scattering exper
 cd faster-to-root/
 ```
 _ Add the faster file in the **data/** folder 
-_ Change the run number in the **faster2tree.C** code
+_ Change the run number in the **faster2tree.C** code  
 ```
 #define DATAFILENAME "data/E863_run_0*run number*_0001.fast"
 #define ROOTFILENAME "root/run_0*run number*.root"
