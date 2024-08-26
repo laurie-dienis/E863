@@ -5,7 +5,12 @@ Code of the analysis of the experiment e863, a resonant elastic scattering exper
 ```
 cd faster-to-root/
 ```
-_ Add the faster file in the **data/** folder  
+_ Add the faster file in the **data/** folder 
+_ Change the run number in the **faster2tree.C** code
+```
+#define DATAFILENAME "data/E863_run_0*run number*_0001.fast"
+#define ROOTFILENAME "root/run_0*run number*.root"
+```
 _ Optional : check the type of data in the faster file 
 ```
 faster_disfast -n *number of events* *name_of_the_file.fast*
