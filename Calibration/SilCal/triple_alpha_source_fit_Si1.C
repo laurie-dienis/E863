@@ -13,7 +13,7 @@ void triple_alpha_source_fit_Si1() {
   double i = 1;
 
   // Select the file
-  TFile *f = new TFile("Inputs/E863/Si1_run020.root", "READ");
+  TFile *f = new TFile("Inputs/E863/Si1_run019.root", "READ");
 
   // Check if the file is open successfully
   if (!f || f->IsZombie()) {

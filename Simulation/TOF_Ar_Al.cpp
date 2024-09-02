@@ -172,8 +172,8 @@ void TOF_Ar_Al() {
 	std::uniform_real_distribution<double> unif2(23.01,250);
     
 	// definition of the 2D and 1D spectra
-    TH2F *h1 = new TH2F("h1","",800,4,20,800,0,60); // impulsion as a function of the energy
-    TH2F *h2 = new TH2F("h2","",800,4,20,800,0,60); // impulsion as a function of the energy
+    TH2F *h1 = new TH2F("h1","",800,4,60,800,0,100); // impulsion as a function of the energy
+    TH2F *h2 = new TH2F("h2","",800,4,60,800,0,100); // impulsion as a function of the energy
     TF1 *data = new TF1("data","[0]*x^[1]", 12, 20);
     data->SetParameter(0, 317.29486);
     data->SetParameter(1, -0.50594);		
