@@ -13,7 +13,7 @@ void triple_alpha_source_fit_Si2() {
   double i = 1;
 
   // Select the file
-  TFile *f = new TFile("Inputs/E863/Si2_run020.root", "READ");
+  TFile *f = new TFile("Inputs/E863/Si2_run019.root", "READ");
 
   // Check if the file is open successfully
   if (!f || f->IsZombie()) {
@@ -58,18 +58,18 @@ void triple_alpha_source_fit_Si2() {
   5804.77, 5762.64};
 
   // Initial guess for parameters: amplitude, mean, sigma for each peak
-  std::vector<double> initialParams = {
-      500, 70735, 100, 200, 70489, 100, 100, 70010, 100,
-
-      600, 75208, 100, 300, 75060, 100, 60, 74645, 100, 50, 73900, 100,
-
-      350, 79588, 100, 110,  79013, 100};
   // std::vector<double> initialParams = {
   //     500, 70735, 100, 200, 70489, 100, 100, 70010, 100,
 
-  //     600, 75208, 100, 300, 75060, 100, 
+  //     600, 75208, 100, 300, 75060, 100, 60, 74645, 100, 50, 73900, 100,
 
-  //     350, 79588, 100};
+  //     350, 79588, 100, 110,  79013, 100};
+  std::vector<double> initialParams = {
+      500, 70735, 100, 200, 70489, 100, 100, 70010, 100,
+
+      600, 75208, 100, 300, 75060, 100, 
+
+      350, 79588, 100};
 
 
   // Gaussian fit with nPeaks components

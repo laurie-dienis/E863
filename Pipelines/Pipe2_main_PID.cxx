@@ -179,15 +179,16 @@ void Pipe2_main_PID() {
     
 
     //////////////He gas////////////
-    // TF1 *line5 = new TF1("line5","18.34*x^(-0.374257)",0, 20);
-    // line5->SetLineColor(kViolet);
-    // line5->Draw("same");
+    TF1 *line5 = new TF1("line5","18.34*x^(-0.374257)",0, 20);
+    line5->SetLineColor(kRed);
+    line5->SetLineWidth(4);
+    line5->Draw("same");
 
     // //alpha
-    // TF1 *line6 = new TF1("line6","41.85433*x^(-0.47297)+60",0, 20);
-    // line6->SetLineColor(kGreen);
-    // line6->SetLineWidth(4);
-    // line6->Draw("same");
+    TF1 *line6 = new TF1("line6","41.85433*x^(-0.47297)",0, 20);
+    line6->SetLineColor(kOrange+1);
+    line6->SetLineWidth(4);
+    line6->Draw("same");
 
     /////////Carbon/////////////
     // TF1 *line3 = new TF1("line3","132.548*x^(-0.553591)",9.03, 20);
@@ -205,11 +206,12 @@ void Pipe2_main_PID() {
     // line5->SetLineWidth(4);
     // line5->Draw("same");
 
-    ////////Chromium///////////
-    // TF1 *line6 = new TF1("line6","126.165*x^(-0.533174)",0, 20);
-    // line6->SetLineColor(kGreen);
-    // line6->SetLineWidth(4);
-    // line6->Draw("same");
+    ////////Al-Al///////////
+    TF1 *line7 = new TF1("line6","18.3180953284087*(x)^(0.706276084966189)",0, 20);
+
+    line7->SetLineColor(kGreen);
+    line7->SetLineWidth(4);
+    line7->Draw("same");
 
     // Plot the cut if it exists
     if (cutG) {
