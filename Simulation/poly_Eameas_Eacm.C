@@ -223,7 +223,7 @@ void poly_Eameas_Eacm(){
     //***************************************
     //Variables MC simu
     //***************************************
-    int Nreac =2000;//500000
+    int Nreac =200;//500000
     int Nbeam =20;//5000
     float step = Nbeam / 100.0;
     double dx=0.07;//mm

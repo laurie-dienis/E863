@@ -13,12 +13,28 @@
 
 void Pipe1_Cal(){
 
-  // List of file names
-  std::vector<std::string> fileNames = {
-      "faster-to-root/root/run_019.root",
-     // "faster-to-root/root/run_006.root",
-      //"RootFiles/Raw/run_test2.root",
-  };
+  // // List of file names
+  // std::vector<std::string> fileNames = {
+  //     "faster-to-root/root/calib_Si_3.root",
+  //    // "faster-to-root/root/run_006.root",
+  //     //"RootFiles/Raw/run_test2.root",
+  // };
+
+  std::vector<std::string> fileNames;
+  std::ifstream runFile("runs.txt");
+  std::string runNumber;
+
+  if (!runFile) {
+      std::cerr << "Error opening run.txt file." << std::endl;
+  }
+  while (std::getline(runFile, runNumber)) {
+    // Ignorer les lignes vides
+    if (runNumber.empty()) continue;
+
+    std::string path = "faster-to-root/root/calib_Si_" + runNumber + ".root";
+    fileNames.push_back(path);
+}
+
   const char *treeName = "DataTree"; // Tree name (common to all files)
 
   // Variables to hold leaf data
@@ -39,14 +55,14 @@ void Pipe1_Cal(){
 
   // Create histograms
   //TH1F *hist_si_1 = new TH1F("hist_si_1", "SI Histogram 1", 10000, 0, 220000);
-  TH1D *hist_si_1 = new TH1D("hist_si_1", "SI Histogram 1", 500, 56000, 65000);
+  TH1D *hist_si_1 = new TH1D("hist_si_1", "SI Histogram 1", 500, 53000, 65000);
   TH1F *hist_tac_1 = new TH1F("hist_tac_1", "TAC Histogram 1", 7000, 0, 850000);
   // TH1F *hist_si_cal_1 = new TH1F("hist_si_cal_1", "SI Calibrated Histogram 1", 2000, 1, 22);
   TH1F *hist_si_cal_1 = new TH1F("hist_si_cal_1", "SI Calibrated Histogram 1", 500, 5, 6);
   TH1F *hist_tac_cal_1 = new TH1F("hist_tac_cal_1", "TAC calibrated Histogram 1", 5000, 0, 80);
   
   //TH1F *hist_si_2 = new TH1F("hist_si_2", "SI Histogram 2", 10000, 0, 220000);
-  TH1D *hist_si_2 = new TH1D("hist_si_2", "SI Histogram 2", 300, 68000, 82000);
+  TH1D *hist_si_2 = new TH1D("hist_si_2", "SI Histogram 2", 300, 63000, 82000);
   TH1F *hist_tac_2 = new TH1F("hist_tac_2", "TAC Histogram 2", 5000, 0, 950000);
   TH1F *hist_si_cal_2 = new TH1F("hist_si_cal_2", "SI Calibrated Histogram 2", 2000, 1, 22);
   TH1F *hist_tac_cal_2 = new TH1F("hist_tac_cal_2", "TAC Calibrated Histogram 2", 5000, 0, 80);

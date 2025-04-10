@@ -28,8 +28,8 @@
 
 using namespace std;
 
-#define DATAFILENAME "data/calib_Si_3_0001.fast"
-#define ROOTFILENAME "root/calib_Si_3.root"
+#define DATAFILENAME "data/E863_run_022_0001.fast"
+#define ROOTFILENAME "root/run_022.root"
 
 int main(int argc, char **argv) {
 
@@ -56,8 +56,8 @@ int main(int argc, char **argv) {
   /**********/
   //  root leaves : channels 1
   // Int_t                  leaf_q1;
-  Double_t leaf_Si_1, leaf_TAC_1, leaf_Si_2, leaf_TAC_2, leaf_Si_B, leaf_TAC_B, leaf_Ge, leaf_faster_time_1,
-      leaf_faster_time_2, leaf_faster_time_B, clock_Si_1, clock_tac_1, clock_Si_2, clock_tac_2, clock_Si_B, clock_tac_B, clock_Ge;
+  Double_t leaf_Si_1, leaf_TAC_1, leaf_Si_2, leaf_TAC_2, leaf_faster_time_1,
+      leaf_faster_time_2, clock_Si_1, clock_tac_1, clock_Si_2, clock_tac_2;
   //  root tree
   TTree *tree;
   char tree_title[256];
@@ -89,10 +89,6 @@ int main(int argc, char **argv) {
   tree->Branch("Si_2", &leaf_Si_2, "Si_2/D");
   tree->Branch("TAC_2", &leaf_TAC_2, "TAC_2/D");
   tree->Branch("faster_time_2", &leaf_faster_time_2, "faster_time_2/D");
-  tree->Branch("Si_B", &leaf_Si_B, "Si_B/D");
-  tree->Branch("TAC_B", &leaf_TAC_B, "TAC_B/D");
-  tree->Branch("faster_time_B", &leaf_faster_time_B, "faster_time_B/D");
-  tree->Branch("Ge", &leaf_Ge, "Ge/D");
 
   // main loop
   while ((data = faster_file_reader_next(reader)) != NULL) { //  read each data
@@ -112,7 +108,7 @@ int main(int argc, char **argv) {
       leaf_TAC_2 = 0;
       leaf_faster_time_2 = 0;
 
-      if (label == 3) { //
+      if (label == 2) { //
         faster_data_load(data, &adc2);
         leaf_Si_1 = adc2.measure;
         clock_Si_1 = faster_data_clock_ns(data);
@@ -152,7 +148,7 @@ int main(int argc, char **argv) {
         tree->Fill();
       }
 
-      if (label == 5) { //
+      if (label == 3) { //
         faster_data_load(data, &adc2);
         leaf_Si_2 = adc2.measure;
         clock_Si_2 = faster_data_clock_ns(data);
@@ -186,50 +182,6 @@ int main(int argc, char **argv) {
         } else {
           leaf_TAC_2 = 5000.;
         }
-        tree->Fill();
-      }
-      
-      if (label == 7) { //
-        faster_data_load(data, &adc2);
-        leaf_Si_B = adc2.measure;
-        clock_Si_B = faster_data_clock_ns(data);
-        // next event should be TAC
-        if ((data = faster_file_reader_next(reader)) !=
-            NULL) { //  read each data
-          label = faster_data_label(data);
-          clock_tac_B = faster_data_clock_ns(data);
-          if (label == 8 && clock_tac_B - clock_Si_B < 1000) { //
-            faster_data_load(data, &adc4);
-            leaf_TAC_B = adc4.measure;
-          }
-        }
-        if ((data = faster_file_reader_next(reader)) !=
-            NULL) { //  read each data
-          label = faster_data_label(data);
-          clock_tac_B = faster_data_clock_ns(data);
-          if (label == 8 && clock_tac_B - clock_Si_B < 1000) { //
-            faster_data_load(data, &adc4);
-            leaf_TAC_B = adc4.measure;
-          }
-        }
-        if ((data = faster_file_reader_next(reader)) !=
-            NULL) { //  read each data
-          label = faster_data_label(data);
-          clock_tac_B = faster_data_clock_ns(data);
-          if (label == 8 && clock_tac_B - clock_Si_B < 1000) { //
-            faster_data_load(data, &adc4);
-            leaf_TAC_B = adc4.measure;
-          }
-        } else {
-          leaf_TAC_B = 5000.;
-        }
-        tree->Fill();
-      }
-      
-      if (label == 9) { //
-        faster_data_load(data, &adc2);
-        leaf_Ge = adc2.measure;
-        clock_Ge = faster_data_clock_ns(data);
         tree->Fill();
       }
 
