@@ -28,8 +28,8 @@
 
 using namespace std;
 
-#define DATAFILENAME "data/calib_Si_3_0001.fast"
-#define ROOTFILENAME "root/calib_Si_3.root"
+#define DATAFILENAME "data/calib_Si_4_0001.fast"
+#define ROOTFILENAME "root/calib_Si_4.root"
 
 int main(int argc, char **argv) {
 
@@ -56,8 +56,10 @@ int main(int argc, char **argv) {
   /**********/
   //  root leaves : channels 1
   // Int_t                  leaf_q1;
-  Double_t leaf_Si_1, leaf_TAC_1, leaf_Si_2, leaf_TAC_2, leaf_Si_B, leaf_TAC_B, leaf_Ge, leaf_faster_time_1,
-      leaf_faster_time_2, leaf_faster_time_B, clock_Si_1, clock_tac_1, clock_Si_2, clock_tac_2, clock_Si_B, clock_tac_B, clock_Ge;
+  Double_t leaf_Si_1, leaf_TAC_1, leaf_Si_2, leaf_TAC_2, leaf_Si_B, leaf_TAC_B,
+      leaf_Ge, leaf_faster_time_1, leaf_faster_time_2, leaf_faster_time_B,
+      clock_Si_1, clock_tac_1, clock_Si_2, clock_tac_2, clock_Si_B, clock_tac_B,
+      clock_Ge;
   //  root tree
   TTree *tree;
   char tree_title[256];
@@ -188,7 +190,7 @@ int main(int argc, char **argv) {
         }
         tree->Fill();
       }
-      
+
       if (label == 7) { //
         faster_data_load(data, &adc2);
         leaf_Si_B = adc2.measure;
@@ -225,7 +227,7 @@ int main(int argc, char **argv) {
         }
         tree->Fill();
       }
-      
+
       if (label == 9) { //
         faster_data_load(data, &adc2);
         leaf_Ge = adc2.measure;
@@ -234,6 +236,20 @@ int main(int argc, char **argv) {
       }
 
       // for time calibration//
+      // if (label == 4) {
+      //   faster_data_load(data, &adc4);
+      //   leaf_TAC_1 = adc4.measure;
+      //   //  next event should be TAC
+      //   if ((data = faster_file_reader_next(reader)) !=
+      //       NULL) { //  read each data
+      //     label = faster_data_label(data);
+      //     faster_data_load(data, &adc4);
+      //     leaf_TAC_1 = adc4.measure;
+      //     tree->Fill();
+      //   } else
+      //     break;
+      // }
+
       // if (label == 6) {
       //   faster_data_load(data, &adc4);
       //   leaf_TAC_2 = adc4.measure;
@@ -248,15 +264,15 @@ int main(int argc, char **argv) {
       //     break;
       // }
 
-      // if (label == 4) {
+      // if (label == 8) {
       //   faster_data_load(data, &adc4);
-      //   leaf_TAC_2 = adc4.measure;
+      //   leaf_TAC_B = adc4.measure;
       //   //  next event should be TAC
       //   if ((data = faster_file_reader_next(reader)) !=
       //       NULL) { //  read each data
       //     label = faster_data_label(data);
       //     faster_data_load(data, &adc4);
-      //     leaf_TAC_2 = adc4.measure;
+      //     leaf_TAC_B = adc4.measure;
       //     tree->Fill();
       //   } else
       //     break;

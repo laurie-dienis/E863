@@ -7,13 +7,13 @@
 #include <iostream>
 #include <vector>
 
-void triple_alpha_source_fit_Si2() {
-  const int nPeaks = 9;        // Number of peaks  6 for run 19
+void triple_alpha_source_fit_Sib() {
+  const int nPeaks = 7;        // Number of peaks  6 for run 19
   const int nIterations = 200; // Number of fit iterations
   double i = 1;
 
   // Select the file
-  TFile *f = new TFile("Inputs/E863/Si2_calib4.root", "READ");
+  TFile *f = new TFile("Inputs/E863/Sib_calib4.root", "READ");
 
   // Check if the file is open successfully
   if (!f || f->IsZombie()) {
@@ -31,7 +31,7 @@ void triple_alpha_source_fit_Si2() {
   }
 
   // Extract the TH1D histogram from the TCanvas
-  TH1D *histo = dynamic_cast<TH1D *>(canvas->GetPrimitive("hist_si_2"));
+  TH1D *histo = dynamic_cast<TH1D *>(canvas->GetPrimitive("hist_si_b"));
   if (!histo) {
     std::cerr << "TH1D histogram not found in the TCanvas!" << std::endl;
     f->Close();
@@ -53,22 +53,16 @@ void triple_alpha_source_fit_Si2() {
   }
 
   // Energies of the peaks in keV
-  std::vector<double> energies = {5156.59, 5114.43, 5105.50, 5485.56, 5442.80,
-                                  5388.23, 5352.97, 5804.77, 5762.64};
+  std::vector<double> energies = {5156.59, 5114.43, 5485.56, 5442.80,
+                                  5388.23, 5804.77, 5762.64};
 
   // Initial guess for parameters: amplitude, mean, sigma for each peak
-  // std::vector<double> initialParams = {
-  //     500, 70735, 100, 200, 70489, 100, 100, 70010, 100,
+  std::vector<double> initialParams = {94000, 13200, 200, 14000, 13081, 200,
 
-  //     600, 75208, 100, 300, 75060, 100, 60, 74645, 100, 50, 73900, 100,
+                                       82500, 14050, 100, 19000, 13940, 100,
+                                       72000, 13800, 100,
 
-  //     350, 79588, 100, 110,  79013, 100};
-  std::vector<double> initialParams = {500, 70735, 100, 200, 70489, 100,
-                                       100, 70010, 100,
-
-                                       600, 75208, 100, 300, 75060, 100,
-
-                                       350, 79588, 100};
+                                       47000, 14883, 50,  21000, 14775, 50};
 
   // Gaussian fit with nPeaks components
   std::string formula = "";
@@ -88,12 +82,12 @@ void triple_alpha_source_fit_Si2() {
     fitFunction->SetParameter(j * 3, initialParams[j * 3]);
     fitFunction->SetParameter(j * 3 + 1, initialParams[j * 3 + 1]);
     fitFunction->SetParameter(j * 3 + 2, initialParams[j * 3 + 2]);
-    fitFunction->SetParLimits(j * 3 + 2, 80, 86.5);
+    fitFunction->SetParLimits(j * 3 + 2, 10, 200);
   }
 
   fitFunction->SetLineColor(kBlue);
   fitFunction->SetLineWidth(3);
-  histo->Rebin(3);
+  histo->Rebin(2);
 
   double bestAvgSigma = std::numeric_limits<double>::max();
   std::vector<double> bestParams(initialParams);
@@ -120,7 +114,7 @@ void triple_alpha_source_fit_Si2() {
     }
 
     currentAvgSigma =
-        (currentAvgSigma / nPeaks) * 0.0911739; // Adjust slope factor here
+        (currentAvgSigma / nPeaks) * 0.387217; // Adjust slope factor here
     double currentAvgErr = sqrt(sum_errors_squared / nPeaks);
 
     if (currentAvgSigma < bestAvgSigma) {
@@ -185,11 +179,13 @@ void triple_alpha_source_fit_Si2() {
   TGraphErrors *graph = new TGraphErrors(nPeaks);
   for (int j = 0; j < nPeaks; ++j) {
     graph->SetPoint(j, means[j], energies[j]);
+    std::cout << "means = " << means[j] << std::endl;
+    std::cout << "energies = " << energies[j] << std::endl;
   }
   graph->Fit(linearFit, "QR");
 
-  // double slope = linearFit->GetParameter(0);
-  double slope = 0.0736969;
+  double slope = linearFit->GetParameter(0);
+  // double slope = 0.0736969;
 
   double avgSigma = 0;
   double sum_errors_squared = 0;
@@ -203,7 +199,7 @@ void triple_alpha_source_fit_Si2() {
   double avg_err = sqrt(sum_errors_squared / nPeaks);
 
   std::cout << "slope = " << slope << std::endl;
-  std::cout << "Sigma_" << i << " = " << avgSigma << "+-" << avg_err << " keV"
+  std::cout << "Sigma_" << i << " = " << avgSigma << "+-" << avg_err << "keV "
             << std::endl;
   std::cout << "FWHM_" << i << " = " << avgSigma * 2.35 << "+-"
             << avg_err * 2.35 << " keV" << std::endl;
@@ -213,10 +209,11 @@ void triple_alpha_source_fit_Si2() {
   histo->Draw();
 
   // Create a new canvas for the linear fit plot
-  // auto *c1 = new TCanvas("c1", "Energy vs Channel");
-  // graph->SetTitle("Energy vs Channel;Channel;Energy (keV)");
-  // graph->Draw("AP");
-  // linearFit->Draw("same");
+  auto *c1 = new TCanvas("c1", "Energy vs Channel");
+  graph->SetTitle("Energy vs Channel;Channel;Energy (keV)");
+  graph->Draw("AP");
+  // graph->SetMarkerStyle(7);
+  linearFit->Draw("same");
 
   // Close the file
   f->Close();

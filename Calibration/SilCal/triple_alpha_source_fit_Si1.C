@@ -8,12 +8,12 @@
 #include <vector>
 
 void triple_alpha_source_fit_Si1() {
-  const int nPeaks = 9; // Number of peaks
+  const int nPeaks = 9;        // Number of peaks
   const int nIterations = 100; // Number of fit iterations
   double i = 1;
 
   // Select the file
-  TFile *f = new TFile("Inputs/E863/Si1_run020.root", "READ");
+  TFile *f = new TFile("Inputs/E863/Si1_calib4.root", "READ");
 
   // Check if the file is open successfully
   if (!f || f->IsZombie()) {
@@ -53,17 +53,16 @@ void triple_alpha_source_fit_Si1() {
   }
 
   // Energies of the peaks in keV
-  std::vector<double> energies = {5156.59, 5114.43, 5105.50, 
-  5485.56,5442.80, 5388.23, 5352.97, 
-  5804.77, 5762.64};
+  std::vector<double> energies = {5156.59, 5114.43, 5105.50, 5485.56, 5442.80,
+                                  5388.23, 5352.97, 5804.77, 5762.64};
 
   // Initial guess for parameters: amplitude, mean, sigma for each peak
   std::vector<double> initialParams = {
-      3300, 57232, 100, 1000, 57000, 100, 500, 56670, 100,
+      3300, 55882, 100, 1000, 55700, 100, 500, 55306, 100,
 
-      4000, 60898, 100, 1500, 60780, 100, 600, 60415, 100, 100, 59830, 100,
+      4000, 59464, 100, 1500, 59279, 100, 600, 59032, 100, 100, 58408, 100,
 
-      2700, 64442, 100, 800,  63950, 100};
+      2700, 62900, 100, 800,  62454, 100};
 
   // Gaussian fit with nPeaks components
   std::string formula = "";
@@ -73,7 +72,7 @@ void triple_alpha_source_fit_Si1() {
       formula += " + ";
     }
   }
-  
+
   TF1 *fitFunction =
       new TF1("fitFunction", formula.c_str(), histo->GetXaxis()->GetXmin(),
               histo->GetXaxis()->GetXmax());
@@ -83,17 +82,16 @@ void triple_alpha_source_fit_Si1() {
     fitFunction->SetParameter(j * 3, initialParams[j * 3]);
     fitFunction->SetParameter(j * 3 + 1, initialParams[j * 3 + 1]);
     fitFunction->SetParameter(j * 3 + 2, initialParams[j * 3 + 2]);
-    fitFunction->SetParLimits(j*3+2,60,73.2);
+    fitFunction->SetParLimits(j * 3 + 2, 60, 73.2);
   }
 
   fitFunction->SetLineColor(kBlue);
   fitFunction->SetLineWidth(3);
   histo->Rebin(2);
-  //histo->Sumw2(); // Use statistical weights
+  // histo->Sumw2(); // Use statistical weights
   double bestAvgSigma = std::numeric_limits<double>::max();
   std::vector<double> bestParams(initialParams);
 
-  
   // Perform multiple fit iterations with adaptive step size
   for (int iter = 0; iter < nIterations; ++iter) {
     std::cout << "Iteration " << iter + 1 << std::endl;
@@ -115,7 +113,8 @@ void triple_alpha_source_fit_Si1() {
       currentParams.push_back(sigma);
     }
 
-    currentAvgSigma = (currentAvgSigma / nPeaks) * 0.0911739; // Adjust slope factor here
+    currentAvgSigma =
+        (currentAvgSigma / nPeaks) * 0.0911739; // Adjust slope factor here
     double currentAvgErr = sqrt(sum_errors_squared / nPeaks);
 
     if (currentAvgSigma < bestAvgSigma) {
@@ -123,7 +122,8 @@ void triple_alpha_source_fit_Si1() {
       bestParams = currentParams;
     }
 
-    std::cout << "Current avg sigma: " << currentAvgSigma << " keV" << std::endl;
+    std::cout << "Current avg sigma: " << currentAvgSigma << " keV"
+              << std::endl;
     std::cout << "Current avg error: " << currentAvgErr << " keV" << std::endl;
 
     // Adjust initial parameters based on current fit
@@ -142,8 +142,10 @@ void triple_alpha_source_fit_Si1() {
         adjustment *= 1.001; // Increase step size if error decreased
       }
       fitFunction->SetParameter(j * 3, initialParams[j * 3] * adjustment);
-      fitFunction->SetParameter(j * 3 + 1, initialParams[j * 3 + 1] * adjustment);
-      fitFunction->SetParameter(j * 3 + 2, initialParams[j * 3 + 2] * adjustment);
+      fitFunction->SetParameter(j * 3 + 1,
+                                initialParams[j * 3 + 1] * adjustment);
+      fitFunction->SetParameter(j * 3 + 2,
+                                initialParams[j * 3 + 2] * adjustment);
     }
   }
 
@@ -155,13 +157,14 @@ void triple_alpha_source_fit_Si1() {
   }
 
   histo->Fit(fitFunction, "R"); // Final fit with best parameters
-  
+
   // // Perform multiple fit iterations
   // for (int iter = 0; iter < nIterations; ++iter) {
   //   std::cout << "Iteration " << iter + 1 << std::endl;
   //   histo->Fit(fitFunction, "R");
 
-  //   // Extract the fit parameters and use them as initial guesses for the next
+  //   // Extract the fit parameters and use them as initial guesses for the
+  //   next
   //   // iteration
   //   for (int j = 0; j < nPeaks; ++j) {
   //     initialParams[j * 3] = fitFunction->GetParameter(j * 3);
@@ -169,7 +172,7 @@ void triple_alpha_source_fit_Si1() {
   //     initialParams[j * 3 + 2] = fitFunction->GetParameter(j * 3 + 2);
   //   }
   // }
-  //histo->Fit(fitFunction, "R");
+  // histo->Fit(fitFunction, "R");
 
   std::vector<double> means(nPeaks);
   std::vector<double> sigmas(nPeaks);
@@ -195,15 +198,16 @@ void triple_alpha_source_fit_Si1() {
   }
   graph->Fit(linearFit, "QR");
 
-  //double slope = linearFit->GetParameter(0);
-  double slope = 0.0911739;
+  double slope = linearFit->GetParameter(0);
+  // double slope = 0.0911739;
 
   double avgSigma = 0;
   double sum_errors_squared = 0;
   for (int j = 0; j < nPeaks; ++j) {
     avgSigma += std::abs(sigmas[j]);
     sum_errors_squared += pow(err_sigmas[j], 2);
-    std::cout << "FWHM_" << j << " = " << sigmas[j] *slope * 2.35 << "keV" << std::endl;
+    std::cout << "FWHM_" << j << " = " << sigmas[j] * slope * 2.35 << "keV"
+              << std::endl;
   }
   avgSigma = (avgSigma / nPeaks) * slope; // in keV
   double avg_err = sqrt(sum_errors_squared / nPeaks);

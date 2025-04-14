@@ -9,10 +9,9 @@
 // (iii) include SRIM expected 4He straggling
 //***************************************
 
+#include "../SRIM.cxx"
 #include <iostream>
 #include <stdlib.h>
-#include "../SRIM.cxx"
-
 
 //***************************************
 // Extraction function for AZURE elastic CS
@@ -71,7 +70,8 @@ double conversion_Emeas_EcmReac(double Emeas) {
 //***************************************
 // Derivation of target effective width
 //***************************************
-double derivation_eff_target_width(double Ecm, double deltaEcm, Physics::SRIM *srim) {
+double derivation_eff_target_width(double Ecm, double deltaEcm,
+                                   Physics::SRIM *srim) {
   double mu = 931.5;
   double m15N = 15 * mu + 0.101;
   double m4He = 4 * mu + 2.425;
@@ -175,11 +175,22 @@ double MCsim(const Char_t *fileCS, int Nsim[3], double EbeamEntry,
 
   // SRIM stopping powers
   auto *srim{new Physics::SRIM};
-  srim->ReadTable("light_window","/home/laurie/Analysis_e863/Inputs/SRIM/4He_Ti.txt");
-  srim->ReadTable("beam_window","/home/laurie/Analysis_e863/Inputs/SRIM/15N_Ti.txt");
-  srim->ReadTable("beam_gas", TString::Format("/home/laurie/Analysis_e863/Inputs/SRIM/15N_4He_%iTorr.txt", pressure_target).Data());
-  srim->ReadTable("light_gas", TString::Format("/home/laurie/Analysis_e863/Inputs/SRIM/4He_4He_%iTorr.txt", pressure_target).Data());
-  
+  srim->ReadTable("light_window",
+                  "/home/laurie/Analysis_e863/Inputs/SRIM/4He_Ti.txt");
+  srim->ReadTable("beam_window",
+                  "/home/laurie/Analysis_e863/Inputs/SRIM/15N_Ti.txt");
+  srim->ReadTable(
+      "beam_gas",
+      TString::Format(
+          "/home/laurie/Analysis_e863/Inputs/SRIM/15N_4He_%iTorr.txt",
+          pressure_target)
+          .Data());
+  srim->ReadTable(
+      "light_gas",
+      TString::Format(
+          "/home/laurie/Analysis_e863/Inputs/SRIM/4He_4He_%iTorr.txt",
+          pressure_target)
+          .Data());
 
   // Extraction cross_sections
   int N_entry = 25000;
@@ -250,7 +261,8 @@ double MCsim(const Char_t *fileCS, int Nsim[3], double EbeamEntry,
     // std::cout<<" beam entrance E "<<  Ebeam/15.001138  <<std::endl;
     thetaBeam = scattered_theta();
     beam_target_width = target_width / cos(3.14 * (thetaBeam / 180.));
-    Ebeam = srim->Slow("beam_window", Ebeam, entranceWindow_width, thetaBeam*TMath::DegToRad());
+    Ebeam = srim->Slow("beam_window", Ebeam, entranceWindow_width,
+                       thetaBeam * TMath::DegToRad());
     // std::cout<<" beam entrance "<<
     // entranceWindow_width/cos(3.14*(thetaBeam/180.)) <<" loss E "<< ELossBeam
     // <<std::endl; std::cout<<" beam entrance after wind "<<  Ebeam/15.001138
@@ -261,7 +273,7 @@ double MCsim(const Char_t *fileCS, int Nsim[3], double EbeamEntry,
       positionBeam = positionBeam + dx;
       // std::cout<< positionBeam<<" energy beam "<<Ebeam/15.001138<<" Ecm "<<
       // Ecm_reaction<<std::endl;
-      Ebeam = srim->Slow("beam_gas", Ebeam,  dx, thetaBeam*TMath::DegToRad());
+      Ebeam = srim->Slow("beam_gas", Ebeam, dx, thetaBeam * TMath::DegToRad());
       vbeamlab = sqrt(1 - 1 / pow((Ebeam / m15N + 1), 2));
       Pfais = sqrt(Ebeam * Ebeam + 2. * Ebeam * m15N);
       beam.SetPxPyPzE(0, 0, Pfais * 0.001, (Ebeam + m15N) * 0.001);
@@ -280,8 +292,11 @@ double MCsim(const Char_t *fileCS, int Nsim[3], double EbeamEntry,
         remainingDist = beam_target_width - positionBeam;
         if (eEjectil_lab > 0 && thetaEjectil_lab < angle_max_Si) {
           distEjectil = (remainingDist) / cos(3.14 * thetaEjectil_lab / 180.);
-          eEjectil_lab = srim->Slow("light_gas", eEjectil_lab, distEjectil, thetaEjectil_lab*TMath::DegToRad());
-          eEjectil_lab = srim->Slow("light_window", eEjectil_lab, exitWindow_width, thetaEjectil_lab*TMath::DegToRad());
+          eEjectil_lab = srim->Slow("light_gas", eEjectil_lab, distEjectil,
+                                    thetaEjectil_lab * TMath::DegToRad());
+          eEjectil_lab =
+              srim->Slow("light_window", eEjectil_lab, exitWindow_width,
+                         thetaEjectil_lab * TMath::DegToRad());
           Emeas = rEloss->Gaus(eEjectil_lab, sigma_e);
           vEjectil_lab_meas = sqrt(1 - 1 / pow((Emeas / m4He + 1), 2));
           vProton_lab_meas = sqrt(1 - 1 / pow((Emeas / m1H + 1), 2));
@@ -313,14 +328,14 @@ double MCsim(const Char_t *fileCS, int Nsim[3], double EbeamEntry,
 // Main Function
 //***************************************
 void MC15N4He() {
-   
+
   std::cout << "Début de MC15N4He()" << std::endl;
 
   //***************************************
   // Experiment conditions
   //***************************************
   double Ibeam = 1.0 * pow(10, 6);     // pps
-  double EbeamEntry = 1.6 * 15.001138; // MeV
+  double EbeamEntry = 1.7 * 15.001138; // MeV
   int choice_pressure_target = 3;
   int aivalable_pressure_target[4] = {92, 183, 274, 350};
   double target_width = 90.; // mm 85==Al   105 Au   90
@@ -329,7 +344,7 @@ void MC15N4He() {
       9.03 * pow(10, 18) / 1000., 1.15 * pow(10, 19) / 1000.}; // at.mm^3
   double timeUT = 16.0 * 8. * 60. * 60.;                       // sec
   /*Ti windows*/
-  double exitWindow_width = 0.006;      // mm
+  double exitWindow_width = 0.006;     // mm
   double entranceWindow_width = 0.003; // mm
 
   double angle_max_Si = 2; // degree
@@ -341,8 +356,8 @@ void MC15N4He() {
   //***************************************
   // MC statistics
   //***************************************
-  int Nsim[3]= {50,400,500};//reac(100000), beam, cs_azure
-  //int Nsim[3] = {50, 400, 500}; // reac(100000), beam, cs_azure
+  int Nsim[3] = {50, 400, 500}; // reac(100000), beam, cs_azure
+  // int Nsim[3] = {50, 400, 500}; // reac(100000), beam, cs_azure
 
   double compt_detec = frac_solid_angle * Nsim[0];
 
@@ -355,10 +370,10 @@ void MC15N4He() {
   TCanvas *c2 = new TCanvas("c2", "c2", 800, 800);
   auto legend2 = new TLegend(0.05, 0.2, 0.3, 0.3);
   auto legend2_renorm = new TLegend(0.05, 0.2, 0.3, 0.3);
-  double Er[2] = {0., 20.};    // MeV
+  double Er[2] = {0., 20.};     // MeV
   double Ecmr[2] = {2.0, 10.0}; // MeV
-  double thetar[2] = {0., 5.}; // deg
-  double ToFr[2] = {0., 60.};  // ns
+  double thetar[2] = {0., 5.};  // deg
+  double ToFr[2] = {0., 60.};   // ns
   double bin_to_theta = 0.05;
   double bin_to_E = 0.002; // kev bin
   double bin_to_ToF = 0.05;
@@ -375,17 +390,24 @@ void MC15N4He() {
   // Input cross-sections from AZURE2
   //***************************************
   // const Char_t *fileCS[1] = {"azure_results/cs180deg15N.dat",};
-  const Char_t *fileCS[1] = {"azure_results/cs180deg_15N_2.dat",};
-  // const Char_t *fileCS[1] = {"azure_results/AZUREOut_aa=1_R=1_ Laurie.extrap",};
+  const Char_t *fileCS[1] = {
+      "azure_results/cs180deg_15N_2.dat",
+  };
+  // const Char_t *fileCS[1] = {"azure_results/AZUREOut_aa=1_R=1_
+  // Laurie.extrap",};
   Double_t Ecm[25000];
   Double_t Ex[25000];
   Double_t CS_diff_theor[25000];
   Double_t N_theor_MC[25000];
   Double_t N_theor_renorm[25000];
-  // int extraction_data = extraction_data_CS(fileCS[0],Ex, Ecm,  CS_diff_theor);
+  // int extraction_data = extraction_data_CS(fileCS[0],Ex, Ecm, CS_diff_theor);
   auto *srim{new Physics::SRIM};
-  srim->ReadTable("light_gas",
-      TString::Format("/home/laurie/Analysis_e863/Inputs/SRIM/4He_4He_%iTorr.txt", aivalable_pressure_target[choice_pressure_target]).Data());
+  srim->ReadTable(
+      "light_gas",
+      TString::Format(
+          "/home/laurie/Analysis_e863/Inputs/SRIM/4He_4He_%iTorr.txt",
+          aivalable_pressure_target[choice_pressure_target])
+          .Data());
   double mu = 931.5;
   double m15N = 15 * mu + 0.101;
   double m4He = 4 * mu + 2.425;
@@ -394,14 +416,13 @@ void MC15N4He() {
   double binAzure = 0.0002;
   for (int i = 0; i < 25000; i++) {
     // std::cout << "iteration"<< i << std::endl;
-    //effective_width = derivation_eff_target_width(Ecm[i], bin_to_E, srim);
+    // effective_width = derivation_eff_target_width(Ecm[i], bin_to_E, srim);
     N_theor_MC[i] = CS_diff_theor[i] * Nsim[2] * compt_detec * Nsim[1] *
                     (bin_to_E / binAzure);
     // std::cout << "iteration"<< i << std::endl;
     N_theor_renorm[i] = (CS_diff_theor[i] * pow(10, -22) * acceptance_angular) *
-                        concentration_target[choice_pressure_target] *
-                        0.08 * 0.1 * (Ibeam * timeUT) * 0.55 *
-                        (bin_to_E / binAzure);
+                        concentration_target[choice_pressure_target] * 0.08 *
+                        0.1 * (Ibeam * timeUT) * 0.55 * (bin_to_E / binAzure);
     // std::cout << "CS_diff_theor = "<< CS_diff_theor[i] << std::endl;
     // std::cout << "Ntheorenorm = "<< N_theor_renorm[i] << std::endl;
   }

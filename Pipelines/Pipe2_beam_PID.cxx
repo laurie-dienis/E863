@@ -1,5 +1,5 @@
-#ifndef Pipe3_Ecm_cxx
-#define Pipe3_Ecm_cxx
+#ifndef Pipe2_PID_cxx
+#define Pipe2_PID_cxx
 
 #include "TCanvas.h"
 #include "TF1.h"
@@ -11,21 +11,21 @@
 #include <iostream>
 #include <string>
 
-void Pipe3_Ecm(){
+void Pipe2_second_PID() {
 
   // List of file names
   std::vector<std::string> fileNames = {
-      "RootFiles/PID/alpha.root",
-      //"RootFiles/Raw/run_test2.root",
+      "RootFiles/Cal/Cal.root",
+      // Add more files as needed
   };
   const char *treeName = "DataTree"; // Tree name (common to all files)
 
   // Variables to hold leaf data
-  double si;
-  double si_cm;
+  double tac;
+  double si_cal;
 
-  TH1F *hist_E = new TH1F("hist_si_cal", "SI Calibrated Histogram", 2000, 1, 10);
-  TH1F *hist_Ecm = new TH1F("hist_si_cal_Ecm", "SI Calibrated Histogram", 2000, 10, 20);
+  // Create histograms
+  TH2F *PID = new TH2F("PID", "PID", 3000, 0, 100, 3000, 0, 10);
 
   // Loop over all files
   for (const auto &fileName : fileNames) {
@@ -43,33 +43,38 @@ void Pipe3_Ecm(){
       std::cerr << "Error: Tree " << treeName
                 << " not found in file: " << fileName << std::endl;
       file->Close();
+      delete file;
       continue;
     }
 
-    // Set branch addresses
-    tree->SetBranchAddress("Si_cal", &si);
+    // Set branch addresses for reading
+    tree->SetBranchAddress("Si_cal_b", &si_cal);
+    tree->SetBranchAddress("TAC_cal_b", &tac);
 
-    // Loop over the tree entries
+    // Loop over the tree entries and apply the graphical cut if it exists
     Long64_t nEntries = tree->GetEntries();
     for (Long64_t i = 0; i < nEntries; ++i) {
       tree->GetEntry(i);
-      hist_E->Fill(si);
-      si_cm = si * 2. ;
-      hist_Ecm->Fill(si_cm);
+
+      // Always fill the PID histogram
+      PID->Fill(tac, si_cal);
+
+      // Fill the new tree only if the cut exists and the point is inside the
+      // cut
+      if (cutG && cutG->IsInside(tac, si_cal)) {
+        PIDTree->Fill();
+      }
     }
 
-    // Close the file
+    // Close the input file and clean up
     file->Close();
     delete file;
   }
 
-
-  // Draw histograms
-  TCanvas *c30 = new TCanvas("c30", "SI Histogram", 800, 600);
-  hist_E->Draw();
-  c30->SaveAs("hist_si_alpha.png");
-  TCanvas *c31 = new TCanvas("c31", "SI Histogram Ecm", 800, 600);
-  hist_Ecm->Draw();
-  c31->SaveAs("hist_si_alpha_Ecm.png");
+  // Plot the PID histogram
+  auto *c20 = new TCanvas("c20", "Pipe2 canvas 0");
+  PID->GetXaxis()->SetTitle("TOF (s)");
+  PID->GetYaxis()->SetTitle("E_Si (MeV)");
+  PID->Draw("colz");
 }
 #endif
