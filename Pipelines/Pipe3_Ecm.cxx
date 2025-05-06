@@ -6,18 +6,16 @@
 #include "TH1.h"
 #include "TROOT.h"
 #include "TString.h"
-#include "TFile.h"
-#include "TTree.h"
 
 #include <fstream>
 #include <iostream>
 #include <string>
 
-void Pipe3_second_Ecm(){
+void Pipe3_Ecm(){
 
   // List of file names
   std::vector<std::string> fileNames = {
-      "RootFiles/PID/alpha_2.root",
+      "RootFiles/PID/alpha.root",
       //"RootFiles/Raw/run_test2.root",
   };
   const char *treeName = "DataTree"; // Tree name (common to all files)
@@ -25,10 +23,9 @@ void Pipe3_second_Ecm(){
   // Variables to hold leaf data
   double si;
   double si_cm;
-  double p0 = 0.368896, p1 = 0.309091, p2 = 0.000396; //350mbar
 
   TH1F *hist_E = new TH1F("hist_si_cal", "SI Calibrated Histogram", 2000, 1, 10);
-  TH1F *hist_Ecm = new TH1F("hist_si_cal_Ecm", "SI Calibrated Histogram", 2000, 1.7, 8);
+  TH1F *hist_Ecm = new TH1F("hist_si_cal_Ecm", "SI Calibrated Histogram", 2000, 10, 20);
 
   // Loop over all files
   for (const auto &fileName : fileNames) {
@@ -50,14 +47,14 @@ void Pipe3_second_Ecm(){
     }
 
     // Set branch addresses
-    tree->SetBranchAddress("Si_cal_2", &si);
+    tree->SetBranchAddress("Si_cal", &si);
 
     // Loop over the tree entries
     Long64_t nEntries = tree->GetEntries();
     for (Long64_t i = 0; i < nEntries; ++i) {
       tree->GetEntry(i);
       hist_E->Fill(si);
-      si_cm = p0 + p1 * si + p2 * si * si;
+      si_cm = si * 2. ;
       hist_Ecm->Fill(si_cm);
     }
 

@@ -6,6 +6,8 @@
 #include "TH1.h"
 #include "TROOT.h"
 #include "TString.h"
+#include "TFile.h"
+#include "TTree.h"
 
 #include <fstream>
 #include <iostream>
@@ -51,62 +53,95 @@ TH1F *extract_TH1F_from_TCanvas(const char *filename, const char *canvas_name) {
   return hist_clone;
 }
 
-void Pipe3_main_Ecm() {
-  std::vector<std::string> fileNames = {"RootFiles/PID/alpha_1.root"};
-  const char *treeName = "DataTree";
+void Pipe3_main_Ecm(TString runNumber) {
+  std::string str_runN = std::string(runNumber.Data());
 
-  double si, si_cm;
-  double p0 = 0.000772, p1 = 0.277615, p2 = -0.000192;
+  bool comparison = true;
+  
+  TChain *chain = new TChain("DataTree");  
 
-  TH1F *hist_E = new TH1F("hist_si_cal", "SI Calibrated Histogram", 500, 1, 10);
-  TH1F *hist_Ecm =
-      new TH1F("hist_si_cal_Ecm", "SI Calibrated Histogram", 500, 0, 6);
-
-  for (const auto &fileName : fileNames) {
-    TFile *file = TFile::Open(fileName.c_str());
-    if (!file || file->IsZombie())
-      continue;
-
-    TTree *tree = nullptr;
-    file->GetObject(treeName, tree);
-    if (!tree) {
-      file->Close();
-      continue;
+  //////////////////////////////////////////////
+  ////////// all runs option : /////////////////
+  //////////////////////////////////////////////
+  if (runNumber == "NONE")
+    chain->Add("RootFiles/PID/15N/alpha_1_*.root");
+  else if (str_runN.find(":") != std::string::npos){
+    int split_pos = str_runN.find(":");
+    std::string str_runN1 = str_runN.substr(0, split_pos);
+    unsigned int runN1 = stoi(str_runN1);
+    std::string str_runN2 = str_runN.substr(split_pos + 1,str_runN.size());
+    unsigned int runN2 = stoi(str_runN2);
+    for (unsigned int irunN = runN1; irunN < runN2 + 1; irunN++){
+     chain->Add(Form("RootFiles/PID/15N/alpha_1_%i.root", irunN));
     }
+  }
+  
+  double si, si_cm;
+//  double p0 = 0.368896, p1 = 0.309091, p2 = 0.000396; // 350mbar NOW WE RUN AT 570 mbar so it is wrong
+//  double p0 = 0.595918, p1 = 0.269029, p2 = 0.00152183; // 428 Torr, equivalent to 570 mbar 
+  // double p0 = 0.311254, p1 = 0.316234, p2 = 0.000258; // 428 Torr, equivalent to 570 mbar 15N
+  // double p0 = 0.369155, p1 = 0.309036, p2 = 0.000399; // 428 Torr, equivalent to 570 mbar 15O
+  double p0 = 0.485602, p1 = 0.292844, p2 = 0.001174; // 428 Torr, equivalent to 570 mbar 15O
 
-    tree->SetBranchAddress("Si_cal_1", &si);
-    Long64_t nEntries = tree->GetEntries();
-    for (Long64_t i = 0; i < nEntries; ++i) {
-      tree->GetEntry(i);
+  TH1F *hist_E = new TH1F("hist_si_cal", "SI Calibrated Histogram", 130, 4, 14);
+  TH1F *hist_Ecm =
+      new TH1F("hist_si_cal_Ecm", "SI Calibrated Histogram", 200, 1.9, 4.3);
+
+  chain->SetBranchAddress("Si_cal_1", &si);
+  Long64_t nEntries = chain->GetEntries();
+  for (Long64_t i = 0; i < nEntries; ++i) {
+      chain->GetEntry(i);
       hist_E->Fill(si);
       si_cm = p0 + p1 * si + p2 * si * si;
       hist_Ecm->Fill(si_cm);
-    }
-
-    file->Close();
-    delete file;
   }
 
+  // TH1F *hist_sim =
+      // extract_TH1F_from_TCanvas("Inputs/Sim/c_renorm_5.root", "c_renorm");
   TH1F *hist_sim =
-      extract_TH1F_from_TCanvas("Inputs/Sim/c_renorm_4.root", "c_renorm");
+      extract_TH1F_from_TCanvas("Inputs/Sim/c_renorm_5.root", "c2");
   if (hist_sim) {
     hist_sim->SetLineColor(kRed); // Ligne rouge
     hist_sim->SetLineWidth(2);    // Épaisseur de ligne
     hist_sim->SetMarkerStyle(1);  // Pas de marqueur (pas de points)
-    hist_sim->Scale(0.007);       // Normalisation
-    hist_sim->Rebin(4);           // Rebinning
+    // hist_sim->Scale(0.07);       // Normalisation
+    // hist_sim->Scale(0.2);       // Normalisation
+    hist_sim->Scale(6e-7*hist_E->Integral()/3.);
+    hist_sim->Rebin(2);           // Rebinning
+    hist_sim->Smooth(5);
   }
+
+  std::vector<double> v_E;
+  std::vector<double> v_N;
+  unsigned int Nsize = 0;
+  unsigned int hist_sim_size = hist_sim->GetNbinsX();
+  for(unsigned int i = 0 ; i < hist_sim_size ; i++){
+    double E = hist_sim->GetBinCenter(i)+0.18;
+    double N = hist_sim->GetBinContent(i);
+    if(N > 0){
+     v_E.push_back(E);
+     v_N.push_back(N);
+     Nsize++;
+    }
+  }
+  
+  TGraph* gsim = new TGraph(Nsize, &v_E[0], &v_N[0]);
+  gsim->SetLineColor(kRed); // Ligne rouge
+  gsim->SetLineWidth(2);    // Épaisseur de ligne
 
   // Plot hist_E
   TCanvas *c1 = new TCanvas("c1", "SI Histogram", 800, 600);
   hist_E->Draw();
+  // hist_E->Rebin(2);
   c1->SaveAs("hist_si_alpha.png");
 
   // Plot hist_Ecm
   TCanvas *c2 = new TCanvas("c2", "SI_CM Histogram", 800, 600);
   hist_Ecm->Draw();
-  if (hist_sim)
-    hist_sim->Draw("SAME C");
+  hist_Ecm->GetYaxis()->SetTitle("Counts/2keV");
+  hist_Ecm->GetXaxis()->SetTitle("E_{CM} (MeV)");
+  // hist_Ecm->Rebin(2);
+  // gsim->Draw("SAME");
   c2->SaveAs("hist_si_alpha_Ecm.png");
 }
 
