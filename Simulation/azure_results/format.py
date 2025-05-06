@@ -1,8 +1,8 @@
 # Script pour supprimer la dernière colonne et la troisième colonne de chaque ligne
 
 # Nom de ton fichier
-fichier_input = "cs180deg_15N.dat"
-fichier_output = "cs180deg_15N_2.dat"
+fichier_input = "cs_15N_3.dat"
+fichier_output = "cs_15N_3.dat"
 
 # Ouverture du fichier en mode lecture
 with open(fichier_input, "r") as f:

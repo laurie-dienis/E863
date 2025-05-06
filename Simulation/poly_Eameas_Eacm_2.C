@@ -69,8 +69,8 @@ void poly_Eameas_Eacm_2(){
     //Experiment conditions
     //***************************************
     int choice_pressure_target = 2;
-    double EbeamEntry = 1.8*15.0030656 ;// MeV
-    int aivalable_pressure_target[4]={100,150,350,410};
+    double EbeamEntry = 1.68*15.0030656 ;// MeV
+    int aivalable_pressure_target[4]={100,150,350,428};
     double target_width = 90;//mm Al==85  Au105.
     /*Al windows*/
   /*  double exitWindow_width = 0.020; //mm
@@ -136,7 +136,7 @@ void poly_Eameas_Eacm_2(){
     double Emeas; int compteur=0; int compteur_reaction=0;
     double positionBeam=0;
 
-    TH2F *h1 = new TH2F("h1", "Emeas_Ecm", 300, 6, 14, 300, 2, 5);
+    TH2F *h1 = new TH2F("h1", "Emeas_Ecm", 300, 2, 14, 300, 2, 5);
     h1->SetNameTitle(
         "1","""variation;Emeas;Ecm_reaction");
     

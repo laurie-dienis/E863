@@ -11,7 +11,7 @@
 #include <iostream>
 #include <string>
 
-void Pipe2_second_PID() {
+void Pipe2_beam_PID() {
 
   // List of file names
   std::vector<std::string> fileNames = {
@@ -25,7 +25,7 @@ void Pipe2_second_PID() {
   double si_cal;
 
   // Create histograms
-  TH2F *PID = new TH2F("PID", "PID", 3000, 0, 100, 3000, 0, 10);
+  TH2F *PID = new TH2F("PID", "PID", 300, 0, 20, 300, 0, 109);
 
   // Loop over all files
   for (const auto &fileName : fileNames) {
@@ -48,8 +48,8 @@ void Pipe2_second_PID() {
     }
 
     // Set branch addresses for reading
-    tree->SetBranchAddress("Si_cal_b", &si_cal);
-    tree->SetBranchAddress("TAC_cal_b", &tac);
+    tree->SetBranchAddress("Si_cal_B", &si_cal);
+    tree->SetBranchAddress("TAC_cal_B", &tac);
 
     // Loop over the tree entries and apply the graphical cut if it exists
     Long64_t nEntries = tree->GetEntries();
@@ -57,13 +57,7 @@ void Pipe2_second_PID() {
       tree->GetEntry(i);
 
       // Always fill the PID histogram
-      PID->Fill(tac, si_cal);
-
-      // Fill the new tree only if the cut exists and the point is inside the
-      // cut
-      if (cutG && cutG->IsInside(tac, si_cal)) {
-        PIDTree->Fill();
-      }
+      PID->Fill(si_cal, tac);
     }
 
     // Close the input file and clean up
@@ -73,8 +67,8 @@ void Pipe2_second_PID() {
 
   // Plot the PID histogram
   auto *c20 = new TCanvas("c20", "Pipe2 canvas 0");
-  PID->GetXaxis()->SetTitle("TOF (s)");
-  PID->GetYaxis()->SetTitle("E_Si (MeV)");
+  PID->GetYaxis()->SetTitle("TOF (ns)");
+  PID->GetXaxis()->SetTitle("E_Si (MeV)");
   PID->Draw("colz");
 }
 #endif

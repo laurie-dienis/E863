@@ -60,9 +60,12 @@ double conversion_Emeas_EcmReac(double Emeas) {
   // double p2 = 0.000164993;
 
   // Ti    6 microns at exit
-  double p0 = 0.369214;
-  double p1 = 0.309026;
-  double p2 = 0.0004;
+  // double p0 = 0.369214;
+  // double p1 = 0.309026;
+  // double p2 = 0.0004;
+  double p0 = 0.443835;
+  double p1 = 0.300804;
+  double p2 = 0.000742;
 
   double Ecm_reaction = p0 + p1 * Emeas + p2 * Emeas * Emeas;
   return Ecm_reaction;
@@ -320,7 +323,7 @@ void MC15O4He() {
   // Experiment conditions
   //***************************************
   double Ibeam = 1.0 * pow(10, 6);     // pps
-  double EbeamEntry = 1.8 * 15.001138; // MeV
+  double EbeamEntry = 1.68 * 15.001138; // MeV
   int choice_pressure_target = 3;
   int aivalable_pressure_target[4] = {92, 183, 274, 350};
   double target_width = 90.; // mm 85==Al   105 Au   90

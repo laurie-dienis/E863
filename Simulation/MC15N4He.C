@@ -59,10 +59,9 @@ double conversion_Emeas_EcmReac(double Emeas) {
   // double p2 = 0.000164993;
 
   // Ti    6 microns at exit
-  double p0 = 0.202280;
-  double p1 = 0.339113;
-  double p2 = -0.000262;
-
+  double p0 = 0.311254;
+  double p1 = 0.316234;
+  double p2 = 0.000258;
   double Ecm_reaction = p0 + p1 * Emeas + p2 * Emeas * Emeas;
   return Ecm_reaction;
 }
@@ -335,17 +334,17 @@ void MC15N4He() {
   // Experiment conditions
   //***************************************
   double Ibeam = 1.0 * pow(10, 6);     // pps
-  double EbeamEntry = 1.7 * 15.001138; // MeV
-  int choice_pressure_target = 3;
-  int aivalable_pressure_target[4] = {92, 183, 274, 350};
+  double EbeamEntry = 1.727 * 15.001138; // MeV
+  int choice_pressure_target = 4;
+  int aivalable_pressure_target[5] = {92, 183, 274, 350, 428};
   double target_width = 90.; // mm 85==Al   105 Au   90
   double concentration_target[4] = {
       3.01 * pow(10, 18) / 1000., 6.02 * pow(10, 18) / 1000.,
       9.03 * pow(10, 18) / 1000., 1.15 * pow(10, 19) / 1000.}; // at.mm^3
   double timeUT = 16.0 * 8. * 60. * 60.;                       // sec
   /*Ti windows*/
-  double exitWindow_width = 0.006;     // mm
-  double entranceWindow_width = 0.003; // mm
+  double exitWindow_width = 0.0062;     // mm
+  double entranceWindow_width = 0.0032; // mm
 
   double angle_max_Si = 2; // degree
   double frac_solid_angle = (1 - cos(angle_max_Si * 3.14 / 180.)) * 0.5;
@@ -441,7 +440,7 @@ void MC15N4He() {
     distriEx_cm[t] =
         new TH1F(Form("distriEx_cm%i", t),
                  Form(";E_{cm} (MeV);Counts/(%.1fkeV)", 1000. * bin_to_E),
-                 binEcmr, Ecmr[0], 10);
+                 1040, 1.7, 4.3);
     distriEx_cm_renorm[t] =
         new TH1F(Form("distriEx_cm_renorm%i", t),
                  Form(";E_{cm} (MeV);Counts/(%.1fkeV)", 1000. * bin_to_E),

@@ -70,16 +70,16 @@ void poly_Eameas_Eacm_15N() {
   //***************************************
   // Experiment conditions
   //***************************************
-  int choice_pressure_target = 2;
-  double EbeamEntry = 1.7 * 15.0030656; // MeV
-  int aivalable_pressure_target[4] = {100, 150, 350, 410};
+  int choice_pressure_target = 3;
+  double EbeamEntry = 1.727 * 15.0030656; // MeV
+  int aivalable_pressure_target[4] = {100, 150, 350, 428};
   double target_width = 90; // mm Al==85  Au105.
   /*Al windows*/
   /*  double exitWindow_width = 0.020; //mm
     double entranceWindow_width=0.004;//mm*/
   /*Au windows*/
-  double exitWindow_width = 0.006;      // mm
-  double entranceWindow_width = 0.0030; // mm
+  double exitWindow_width = 0.0062;      // mm
+  double entranceWindow_width = 0.0032; // mm
   double angle_max_Si = 2;              // degree
   // Si detector response
   TRandom *rEloss = new TRandom(); // gaussian reponse of Si detector

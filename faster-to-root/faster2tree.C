@@ -28,8 +28,8 @@
 
 using namespace std;
 
-#define DATAFILENAME "data/calib_Si_4_0001.fast"
-#define ROOTFILENAME "root/calib_Si_4.root"
+#define DATAFILENAME "data/calib_Si_5_0001.fast"
+#define ROOTFILENAME "root/calib_Si_5.root"
 
 int main(int argc, char **argv) {
 
@@ -113,6 +113,8 @@ int main(int argc, char **argv) {
       leaf_Si_2 = 0;
       leaf_TAC_2 = 0;
       leaf_faster_time_2 = 0;
+      leaf_Si_B = 0;
+      leaf_TAC_B = 0;
 
       if (label == 3) { //
         faster_data_load(data, &adc2);
@@ -123,6 +125,7 @@ int main(int argc, char **argv) {
             NULL) { //  read each data
           label = faster_data_label(data);
           clock_tac_1 = faster_data_clock_ns(data);
+          // std::cout << "diff = " << clock_tac_1 - clock_Si_1 << "\n";
           if (label == 4 && clock_tac_1 - clock_Si_1 < 1000) { //
             faster_data_load(data, &adc4);
             leaf_faster_time_1 = clock_tac_1 - clock_Si_1;
@@ -200,7 +203,8 @@ int main(int argc, char **argv) {
             NULL) { //  read each data
           label = faster_data_label(data);
           clock_tac_B = faster_data_clock_ns(data);
-          if (label == 8 && clock_tac_B - clock_Si_B < 1000) { //
+          // std::cout << "diff = " << clock_tac_B - clock_Si_B << "\n";
+          if (label == 8 && clock_tac_B - clock_Si_B < 10000) { //
             faster_data_load(data, &adc4);
             leaf_TAC_B = adc4.measure;
           }
@@ -209,7 +213,7 @@ int main(int argc, char **argv) {
             NULL) { //  read each data
           label = faster_data_label(data);
           clock_tac_B = faster_data_clock_ns(data);
-          if (label == 8 && clock_tac_B - clock_Si_B < 1000) { //
+          if (label == 8 && clock_tac_B - clock_Si_B < 10000) { //
             faster_data_load(data, &adc4);
             leaf_TAC_B = adc4.measure;
           }
@@ -218,7 +222,7 @@ int main(int argc, char **argv) {
             NULL) { //  read each data
           label = faster_data_label(data);
           clock_tac_B = faster_data_clock_ns(data);
-          if (label == 8 && clock_tac_B - clock_Si_B < 1000) { //
+          if (label == 8 && clock_tac_B - clock_Si_B < 10000) { //
             faster_data_load(data, &adc4);
             leaf_TAC_B = adc4.measure;
           }

@@ -15,7 +15,7 @@ void Pipe1_Cal() {
 
   // List of file names
   std::vector<std::string> fileNames = {
-      "faster-to-root/root/calib_Si_4.root",
+      "faster-to-root/root/calib_Si_5.root",
   };
 
   //   std::vector<std::string> fileNames;
@@ -48,7 +48,7 @@ void Pipe1_Cal() {
   double tac_2;
   double si_cal_2;
   double tac_cal_2;
-  double cal_parameter_Si_2 = 0.0736969;
+  double cal_parameter_Si_2 = 0.0762916;     // new parameter
   double cal_parameter_tac_2 = 0.0011900512; // new parameter
 
   double si_b;
@@ -68,7 +68,7 @@ void Pipe1_Cal() {
   TH1F *hist_si_cal_1 =
       new TH1F("hist_si_cal_1", "SI Calibrated Histogram 1", 500, 5, 6);
   TH1F *hist_tac_cal_1 =
-      new TH1F("hist_tac_cal_1", "TAC calibrated Histogram 1", 5000, 0, 80);
+      new TH1F("hist_tac_cal_1", "TAC calibrated Histogram 1", 5000, 1, 100);
 
   // TH1F *hist_si_2 = new TH1F("hist_si_2", "SI Histogram 2", 10000, 0,
   // 220000);
@@ -180,6 +180,8 @@ void Pipe1_Cal() {
       hist_si_cal_b->Fill(si_cal_b);
       // }
       tac_cal_b = tac_b * cal_parameter_tac_b;
+      // if (tac_b > 0)
+      //   std::cout << "tac_b = " << tac_b << "\n";
       hist_tac_cal_b->Fill(tac_cal_b);
 
       // Fill the new tree
@@ -227,12 +229,11 @@ void Pipe1_Cal() {
   hist_si_b->Draw();
 
   TCanvas *c11 = new TCanvas("c11", "TAC Histogram", 800, 600);
-  c11->DivideSquare(2);
-  c11->cd(1);
-  hist_tac_cal_1->Draw();
-  c11->cd(2);
+  std::cout << "Hist tac_cal_1: entries = " << hist_tac_cal_1->GetEntries()
+            << ", mean = " << hist_tac_cal_1->GetMean()
+            << ", max X = " << hist_tac_cal_1->GetXaxis()->GetXmax()
+            << ", max content = " << hist_tac_cal_1->GetMaximum() << std::endl;
   hist_tac_cal_b->Draw();
-  c11->SaveAs("hist_tac.png");
 
   TCanvas *c12 = new TCanvas("c12", "SI Calibrated Histogram n1", 800, 600);
   hist_si_cal_1->GetXaxis()->SetTitle("E (MeV)");
